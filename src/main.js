@@ -7,6 +7,7 @@ import Axios from 'axios'
 import 'lib-flexible'                               //自动适应加载方案
 import VueAwesomeSwiper from 'vue-awesome-swiper'   //加载AwesomeSwiper
 import 'swiper/dist/css/swiper.css'                 //加载AwesomeSwiper样式
+
 import httpConfig from './router/httpConfig'        //加载API接口文件
 Vue.prototype.httpConfig = httpConfig;              //定义接口使用
 
