@@ -2,6 +2,7 @@
     <div>
         <HeaderTitle title="产品详情"/>
 
+        <!--Banner-->
         <div class="goods-banner">
             <swiper :options="swiperBanner">
                 <swiper-slide v-for="(item, index) in Details.banner" :key="index">
@@ -10,6 +11,7 @@
             </swiper>
         </div>
 
+        <!--标题信息-->
         <div class="goods-title">
             <h2>{{Details.title}}</h2>
             <p>{{Details.info}}</p>
@@ -17,6 +19,7 @@
             <span>￥{{Details.origin_price}}</span>
         </div>
 
+        <!--图标信息-->
         <div class="goods-info">
             <p>发货地：{{Details.address}}</p>
             <p>销量：{{Details.volume}}</p>
@@ -29,6 +32,7 @@
             </div>
         </div>
 
+        <!--规格信息-->
         <div class="goods-param" >
             <div class="param-title">
                 <h2>参数规格</h2>
@@ -39,8 +43,12 @@
             </div>
         </div>
 
-        <SwiperGoodsList />
+        <!--推荐产品-->
+        <div class="goods-recomm">
+            <SwiperGoodsList />
+        </div>
 
+        <!--产品详情-->
         <div class="goods-content">
             <div class="content-title">
                 <h2 :class="{'title-active': conActive}" @click="contentClick" id="content">产品详情</h2>
@@ -64,26 +72,35 @@
                                     <p>2019-04-11 12:45:28</p>
                                 </div>
                                 <div class="header-fabulous">
-                                    <i :class="[{'agree_active': isAgree}, 'agree']" @click="agreeClick"></i>
+                                    <i class="agree" @click="agreeClick($event)"></i>
                                     <p>123</p>
                                 </div>
                             </div>
                             <div class="comment-info">
                                 <p>本例演示如何设置元素的形状。此元素被剪裁到这个形状内，并显示出来。本例演示如何设置元素的形状。此元素被剪裁到这个形状内，并显示出来。本例演示如何设置元素的形状。此元素被剪裁到这个形状内，并显示出来。</p>
                                 <div class="info-img">
-                                    <img src="../assets/goods.jpg" alt="" />
-                                    <img src="../assets/goods.jpg" alt="" />
-                                    <img src="../assets/goods.jpg" alt="" />
-                                    <img src="../assets/goods.jpg" alt="" />
-                                    <img src="../assets/goods.jpg" alt="" />
+                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
+                                    <img src="../assets/nav.png" alt="" @click="openImg"/>
+                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
+                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
+                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
                                 </div>
                             </div>
                         </div>
                     </swiper-slide>
                 </swiper>
             </div>
-
         </div>
+
+        <!--底部功能-->
+        <div class="goods-footer">
+        </div>
+
+        <!--图片弹出加载-->
+        <div class="open-img" v-show="imgUrl">
+            <img :src="imgUrl" alt="" @click="closeImg"/>
+        </div>
+
 
     </div>
     
@@ -93,6 +110,7 @@
     import HeaderTitle from '../components/HeaderTitle'
     import SwiperGoodsList from '../components/SwiperGoodsList'
 
+
     export default {
         name: "goods",
         data() {
@@ -101,9 +119,9 @@
                 Params: [],
                 paramOpen:false,
                 Comment: [1,2,3,4,5],
-                isAgree:false,
                 conActive: true,
                 comActive: false,
+                imgUrl: '',
                 swiperBanner: {
                     slidesPerView: "auto",
                     loop: true,
@@ -114,19 +132,15 @@
                     loop: false,
                     autoplay: false,
                     autoHeight:true,
-                    on:{
-                        slideChangeTransitionEnd() {
-                            if(this.activeIndex === 0) {
-                                console.log(this.conActive);
-                                console.log(this.activeIndex);
+                    on: {
+                        slideChangeTransitionEnd:() =>{
+                            if(this.ContentSwiper.activeIndex === 0) {
                                 this.conActive = true;
                                 this.comActive = false;
                             }
-                            if(this.activeIndex === 1) {
-                                console.log(this.conActive);
-                                console.log(this.activeIndex);
-                                this.comActive = true;
+                            if(this.ContentSwiper.activeIndex === 1) {
                                 this.conActive = false;
+                                this.comActive = true;
                             }
                         }
                     }
@@ -136,7 +150,8 @@
         },
         components: {
             HeaderTitle,
-            SwiperGoodsList
+            SwiperGoodsList,
+
         },
         created() {
             this.axios.get(this.httpConfig.ApiGoodsDetail+'18')
@@ -150,30 +165,38 @@
                 })
         },
         computed: {
-            ContentSwiper() {   //相当于建立实例点
+            ContentSwiper() {   //相当于建立swiper实例化方法
                 return this.$refs.sContent.swiper
             }
         },
         methods:{
-            ParamClick() {
+            ParamClick() {      //产品参数切换
                 this.paramOpen = !this.paramOpen;
             },
-            agreeClick(event) {
-                this.event.siblings().removeClass('title-active');
-                this.event.addClass('title-active');
-            },
-            contentClick(event) {
-                console.log(event);
-                if(event.originalTarget.id === 'content'){
-                    console.log(event.originalTarget.id);
+            agreeClick(event) {     //评论点赞
+                event.target.classList.add('agree_active');
 
+            },
+            contentClick(event) {           //产品详情标题切换事件
+                if(event.currentTarget.id === 'content'){
+                    this.conActive = true;
+                    this.comActive = false;
                     this.ContentSwiper.slideTo(0);
                 }
-                if(event.originalTarget.id === 'comment'){
+                if(event.currentTarget.id === 'comment'){
+                    this.conActive = false;
+                    this.comActive = true;
                     this.ContentSwiper.slideTo(1);
                 }
 
+            },
+            openImg(event) {    //放大产品评论图
+                this.imgUrl = event.currentTarget.src;
+            },
+            closeImg() {        //关闭产品评论图
+                this.imgUrl = '';
             }
+
         },
     }
 </script>
@@ -316,6 +339,10 @@
         -webkit-line-clamp: 1; /* 这个表示要显示几行 */
         -webkit-box-orient: vertical;
     }
+    /*产品推荐*/
+    .goods-recomm {
+        padding: 0 0.2rem;
+    }
     /*产品详情*/
     .goods-content {
         margin: 0.6rem 0 ;
@@ -344,7 +371,7 @@
     }
     .goods-content .content-swiper{
         overflow: hidden;
-        padding:0.6rem 0;
+        padding:0.4rem 0.2rem 0.6rem 0.2rem;
     }
     .goods-content .content-swiper .content-detail>>>img{
         width:100%;
@@ -428,6 +455,23 @@
         width:1.5rem;
         height:1.5rem;
         border-radius:0.2rem;
+    }
+    /*图片放大*/
+    .open-img {
+        width:100%;
+        height:100%;
+        z-index: 9999;
+        background: rgba(130, 135, 125, 0.8);
+        position: absolute;
+        top:0;
+        left:0;
+        padding:0 0.1rem;
+        text-align:center;
+        display:flex;
+        align-items: center;
+    }
+    .open-img img{
+        width:100%;
     }
 
 

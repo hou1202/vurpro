@@ -589,8 +589,87 @@
             基于移动端的弹性布局方案
         安装
             npm install lib-flexible --save
+#vue方法
+    data()      定义VUE页面数据
+        data() {
+            return {
+                //......
+                name: 'li'
+            }
+        }
+        components:      //申明组件
+            components:{
+                Explate,        //简写形式
+                Explate: Explate
+            }
             
-        
+        mounted()        //钩子，在这发起后端请求，拿回数据，配合路由钩子做一些事情
+            mounted() {
+                this.name = 'Eall'
+            }
+            
+        methods:        //常规方法定义
+            methods: {
+                function() {
+                    //......
+                }
+            }
+            
+        computed:       //计算方法定义，与methods不同，computed会使用缓存机制
+            computed: {
+                function() {
+                    //...
+                }
+            }
+            
+        props:          //定义父级传递数据,有数组和对象两种形式
+            props: ['params1', 'params2']
+            props: {
+                params1: String,           //指定单一数据类型(限制数据类型)
+                params2: [Number, String]   //指定多种数据类型
+                params3: {
+                    type: Number,
+                    default:18          //指定数据默认值
+                    required: true      //指定数据必须
+                },
+                params4:{
+                    type: Object,
+                    default: function() {   //如果传递的是对象或数组类型，定义默认数据时，要以方法和返回
+                        return {
+                            data1: "Li lee",
+                            data2:"English"
+                        }
+                    }
+                }
+            }
+            
+        created()       //生命周期钩子的函数
+            created() {
+                .....
+            }
+#this
+    在部分的第三方插件事件中（例swiper），this指向了例swiper对象，而并非指向了vue对象，而我们有例swiper对象中，有时需要调用vue对象，这个可以用 => 将this指向vue对象
+    例
+    data:{
+        return {
+            index: 0,
+            swiper: {
+                loop: false,
+                on: {
+                   click:() =>{             // 使用es6的箭头函数，使this指向vue对象
+                        /**
+                         * 通过$refs获取对应的swiper对象
+                         * mySwiper 为在swiper中定义的ref
+                         * <swiper :options="swiper" ref="mySwiper">
+                         * swiper = this.$refs.mySwiper.swiper 也可以通过在外部定义实例化方法（如定义在computed）
+                         */
+                        let swiper = this.$refs.mySwiper.swiper;
+                        this.index.swiper.activeIndex;
+                   }
+                }
+            },
+        }
+    }
         
         
         
