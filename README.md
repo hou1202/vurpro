@@ -671,8 +671,83 @@
         }
     }
         
+      
+#LazyLoad   图片懒加载
+    gitHub
+        https://github.com/hilongjw/vue-lazyload
+    安装
+        npm install vue-lazyload --save-dev
         
+    加载
+        main.js引入
+        import VueLazyLoad from 'vue-lazyload'
+        //组件配置参数
+        Vue.use(VueLazyLoad)
+        //全局配置参数
+        Vue.use(VueLazyLoad,{
+            error:'./static/error.png',
+            loading:'./static/loading.png'
+        })
+    使用
+        v-lazy=""  代替src
+        <img v-lazy="imgSrc" >
+        例      
+            <img v-lazy="imgSrc" >
+            <img v-lazy="imgObj" >
+            data() {
+                return {
+                    //配置项在组件中定义
+                    imgObj:{    //引入图片如果在在js(即本地图片)，必须require引入
+                        src: require('../assets/abc.png'),
+                        load: require('../assets/load.png'),
+                        error: require('../assets/error.png'),
+                    }
+                    //配置项在min.js中已经定义
+                    imgSrc: 'http://www.aoogi.com/abc.png"
+                }
+            }
+            
+#Less
+    less为css的一种预处理器，使用rem，以适应不同屏幕分辨率下的适应
+    安装
+        /**
+         * 安装的内容有
+         * less
+         * less-loader 
+         * style-loader
+         * css-loader
+         */
+        npm install less less-loader style-loader css-loader --save-dev
+    修改配置文件
+        build/webpack.base.conf.js
+        module: {
+            rules: [
+                ......
+                {
+                    test:/\.less$/,
+                    //loader / use 加载方法使用一个就可以了
+                    loader: "style-loader!css-loader!less-loader",
+                    use:[        
+                        "style-loader",
+                        "css-loader",
+                        "less-loader"
+                    ]
+                }
+            ]
+        }
         
+    检查
+        在/padkage.json中的devDependencies项中，查看less-loader、style-loader、css-loader是否安装成功
+        
+    使用
+        定义lang="less"
+        <template>
+            <div>
+            </div>
+        </template>
+        <style scoped lang="less">
+            ....
+        </style>
         
         
         

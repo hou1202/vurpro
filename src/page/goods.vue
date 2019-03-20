@@ -62,28 +62,27 @@
                     </swiper-slide>
                     <!--产品评论-->
                     <swiper-slide>
-                        <div class="content-comment" v-for="item in Comment">
+                        <div class="content-comment" v-for="item in Comments">
                             <div class="comment-header">
                                 <div class="header-portrait">
-                                    <img src="../assets/goods.jpg" alt="" />
+                                    <img :src="item.portrait" alt="" />
                                 </div>
                                 <div class="header-account">
-                                    <p>我们是一标题</p>
-                                    <p>2019-04-11 12:45:28</p>
+                                    <p>{{item.name}}</p>
+                                    <p>{{item.create_time}}</p>
                                 </div>
                                 <div class="header-fabulous">
                                     <i class="agree" @click="agreeClick($event)"></i>
-                                    <p>123</p>
+                                    <p>{{item.laud}}</p>
                                 </div>
                             </div>
                             <div class="comment-info">
-                                <p>本例演示如何设置元素的形状。此元素被剪裁到这个形状内，并显示出来。本例演示如何设置元素的形状。此元素被剪裁到这个形状内，并显示出来。本例演示如何设置元素的形状。此元素被剪裁到这个形状内，并显示出来。</p>
-                                <div class="info-img">
-                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
-                                    <img src="../assets/nav.png" alt="" @click="openImg"/>
-                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
-                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
-                                    <img src="../assets/goods.jpg" alt="" @click="openImg"/>
+                                <p>{{item.content}}</p>
+                                <div class="info-img" >
+                                    <template v-for="itemImg in item.img">
+                                        <img :src="itemImg" alt="" @click="openImg"/>
+                                    </template>
+
                                 </div>
                             </div>
                         </div>
@@ -94,6 +93,15 @@
 
         <!--底部功能-->
         <div class="goods-footer">
+            <div class="footer-left">
+                <i :class="isColl ? 'icon-coll-true' : 'icon-coll'"></i>
+                <i class="icon-share"></i>
+                <i class="icon-car"></i>
+            </div>
+            <div class="footer-right">
+                <button type="button">加入购物车</button>
+                <button type="button">立即购买</button>
+            </div>
         </div>
 
         <!--图片弹出加载-->
@@ -115,10 +123,12 @@
         name: "goods",
         data() {
             return {
-                Details: [],
-                Params: [],
-                paramOpen:false,
-                Comment: [1,2,3,4,5],
+                Details: [],                //产品详情
+                Params: [],                 //产品参数
+                Spec: [],                   //产品规格
+                Comments: [],               //产品评论
+                isColl: false,              //是否收藏
+                paramOpen:false,            //产品参数展开控制
                 conActive: true,
                 comActive: false,
                 imgUrl: '',
@@ -154,11 +164,14 @@
 
         },
         created() {
-            this.axios.get(this.httpConfig.ApiGoodsDetail+'18')
+            this.axios.get(this.httpConfig.ApiGoodsDetail+'1')
                 .then( config => {
                     console.log(config);
                     this.Details = config.data.detail;
                     this.Params = config.data.params;
+                    this.Spec = config.data.spec;
+                    this.Comments = config.data.comments;
+                    this.isColl = config.data.isColl;
                 })
                 .catch( error => {
                     console.log(error);
@@ -452,15 +465,15 @@
         padding-top:0.2rem;
     }
     .content-comment .comment-info .info-img img {
-        width:1.5rem;
-        height:1.5rem;
+        width:1.4rem;
+        height:1.4rem;
         border-radius:0.2rem;
     }
     /*图片放大*/
     .open-img {
         width:100%;
         height:100%;
-        z-index: 9999;
+        z-index: 99;
         background: rgba(130, 135, 125, 0.8);
         position: absolute;
         top:0;
@@ -472,6 +485,65 @@
     }
     .open-img img{
         width:100%;
+    }
+    /*底部功能*/
+    .goods-footer{
+        width: 100%;
+        height:1.2rem;
+        position:fixed;
+        bottom:0;
+        left:0;
+        background:#fff;
+        z-index: 90;
+    }
+    .goods-footer .footer-left {
+        width:40%;
+        padding-left:0.4rem;
+        float:left;
+    }
+    .goods-footer .footer-left i{
+        display:block;
+        width:1rem;
+        height:1.2rem;
+        float:left;
+    }
+    i.icon-coll {
+        background:url(../assets/footer-coll.png) no-repeat center center;
+        background-size:0.56rem;
+    }
+    i.icon-coll-true {
+        background:url(../assets/footer-coll-true.png) no-repeat center center;
+        background-size:0.56rem;
+    }
+    i.icon-share {
+        background:url(../assets/footer-share.png) no-repeat center center;
+        background-size:0.56rem;
+    }
+    i.icon-car {
+        background:url(../assets/footer-car.png) no-repeat center center;
+        background-size:0.56rem;
+    }
+    .goods-footer .footer-right {
+        width:60%;
+        float:left;
+    }
+    .goods-footer .footer-right button {
+        width:3rem;
+        height:1.2rem;
+        background:#cc5116;
+        color:#fff;
+        border:1px solid #cc5116;
+        float:right;
+        margin-left:0.04rem;
+        letter-spacing: 0.06rem;
+        font-size:0.32rem;
+    }
+    .goods-footer .footer-right button:first-child {
+
+    }
+    .goods-footer .footer-right button:last-child {
+        width:2.6rem;
+        border-top-left-radius:1rem;
     }
 
 
