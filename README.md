@@ -749,6 +749,142 @@
             ....
         </style>
         
+#VUEX
+    Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式
+        每一个 Vuex 应用的核心就是 store（仓库）
+        “store”基本上就是一个容器，它包含着你的应用中大部分的状态 (state)。
+        Vuex 和单纯的全局对象有以下两点不同：
+            1、Vuex 的状态存储是响应式的。当 Vue 组件从 store 中读取状态的时候，若 store 中的状态发生变化，那么相应的组件也会相应地得到高效更新。
+            2、你不能直接改变 store 中的状态。改变 store 中的状态的唯一途径就是显式地提交 (commit) mutation。这样使得我们可以方便地跟踪每一个状态的变化，从而让我们能够实现一些工具帮助我们更好地了解我们的应用。
+    
+    什么情况下使用Vuex
+         Vuex 可以帮助我们管理共享状态，但也附带了更多的概念和框架,使用 Vuex 可能是繁琐冗余的。
+         如果您的应用够简单，您最好不要使用 Vuex。但是，如果您需要构建一个中大型单页应用，您很可能会考虑如何更好地在组件外部管理状态，Vuex 将会成为自然而然的选择。
+         
+    Vuex状态管理
+        view ->(despatch) Action ->(Commit) Mutations ->(Mutate) -> State ->View
+        注意：Action不是必须品，如果是有异步操作才有可能用到Action，否则可以不使用
+        
+    安装
+        npm install vuex --save
+        
+    配置
+        在main.js中定义Vuex配置
+        import Vuex from 'vuex'     //引入
+        Vue.use(Vuex)               //使用
+        const store = new Vuex.Store({          //创建一个store仓库
+            state: {                            //定义状态管理项
+                name: 'Li',
+                age: 18,
+            },
+            //mutations只能对同步或本地数据进行计算操作，不可对异步数据进行计算操作
+            mutations: {                        //对Store仓库数据进行计算操作，即改变Store仓库数据值
+                //  funcction .....
+                increment(state) {              //increment方法名，state为参数
+                    state.age++;
+                }
+            },
+            //actions 可以对包含异步的所有数据进行操作
+            actions: {
+                //  funciton ....
+                increment(context) {            //increment方法名，context中保留参数名，包含{state, rootState, commit, dispatch, getters, rootGetters}，如果只需要调用其中的某一个，可用{commit}
+                    context.commit("increment") //调用执行mutations中的increment方法
+                }
+            },
+            //getters 对state中的数据进行控制，在读取数据时，即不直接读取state中的数据，而是从getters中进行读取
+            getters: {
+                setAge(state) {     
+                    return state.age > 0 ? state.age : 0 ;
+                }
+            }
+        })
+        new Vue({
+            el: '#app',
+            ....
+            store,                  //将store仓库注入到Vue实例中    
+            ....
+        })
+        
+    使用
+        由于 Vuex 的状态存储是响应式的，从 store 实例中读取状态最简单的方法就是在计算属性中返回某个状态
+        <div>
+            {{getStore}}
+            {{getGetter}}
+            <button @click='incMutAge'>加</button>
+            <button @click='incActAge'>加</button>
+            <button @click='incActAge'>加</button>
+        </div>
+        
+        data() {
+            return {
+            
+            }
+        },
+        computed: {
+            getStore() {        //直接读取state中的数据信息
+                return this.store.state.name        //this.store   指定store仓库
+            }
+            getGetter() {       //读取getters中经过处理的数据信息
+                return this.store.getters.setAge()
+            }
+        },
+        methods: {
+            incMutAge() {   //调用mutations
+                this.store.commit("increment")      //对store仓库的mutations方法调用使用 commit ，调用方法名为字符串
+            }
+            incActAge() {   //调用actions
+                this.store.dispathc("increment")    ////对store仓库的actions方法调用使用 dispathc ，调用方法名为字符串
+            }
+        }
+        
+    Module
+        由于使用单一状态树，应用的所有状态会集中到一个比较大的对象。当应用变得非常复杂时，store 对象就有可能变得相当臃肿
+        Vuex 允许我们将 store 分割成模块（module）。每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块——从上至下进行同样方式的分割
+        const moduleA = {
+          state: { ... },
+          mutations: { ... },
+          actions: { ... },
+          getters: { ... }
+        }
+        const moduleB = {
+          state: { ... },
+          mutations: { ... },
+          actions: { ... }
+        }
+        const store = new Vuex.Store({
+          modules: {
+            a: moduleA,
+            b: moduleB
+          }
+        })
+        store.state.a // -> moduleA 的状态
+        store.state.b // -> moduleB 的状态
+    独立提取
+        vuex的文件信息放在main.js中，会增加main.js中的臃肿度，所以可以对VUEX信息进行提取
+        新建store文件夹（一般可放在src或根目录下）
+        新建index.js文件
+            import Vue from 'vue'       //引入vue
+            import Vuex from 'vuex'     //引入vuex
+            Vue.use(Vuex)               //使用
+            //创建一个store仓库
+            export defalut new Vuex.Store({
+                state: {
+                },
+                mutations: {
+                },
+                getters: {
+                }
+            })  
+        main.js引入
+            import store from './store'
+            new Vue({
+                el: '#app',
+                ....
+                store,                  //将store仓库注入到Vue实例中    
+                ....
+            })
+        
+        
         
         
         

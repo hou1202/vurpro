@@ -164,7 +164,7 @@
 
         },
         created() {
-            this.axios.get(this.httpConfig.ApiGoodsDetail+'1')
+            this.axios.get(this.$apiConfig.ApiGoodsDetail+'1')
                 .then( config => {
                     console.log(config);
                     this.Details = config.data.detail;

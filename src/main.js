@@ -2,19 +2,23 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+/*vue-router*/
 import router from './router'
-import Axios from 'axios'
+/*vuex-store*/
+import store from '../store'
+/*flexibli-自适应方案*/
 import 'lib-flexible'                               //自动适应加载方案
+/*Swiper*/
 import VueAwesomeSwiper from 'vue-awesome-swiper'   //加载AwesomeSwiper
 import 'swiper/dist/css/swiper.css'                 //加载AwesomeSwiper样式
-
-import httpConfig from './router/httpConfig'        //加载API接口文件
-Vue.prototype.httpConfig = httpConfig;              //定义接口使用
-
-
-Vue.use(VueAwesomeSwiper)
-
+Vue.use(VueAwesomeSwiper);
+/*apiConfig-接口文件*/
+import apiConfig from './router/apiConfig'        //加载API接口文件
+Vue.prototype.$apiConfig = apiConfig;              //定义接口使用
+/*Axios*/
+import Axios from 'axios'
 Vue.prototype.axios = Axios;
+
 Axios.defaults.baseURL = "http://www.aoogi.com";
 Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 /*拦截器处理Axios请求*/
@@ -41,12 +45,15 @@ Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
       return Promise.reject(error);
   });
 
-Vue.config.productionTip = false
+
+
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+    el: '#app',
+    router,
+    store,
+    components: { App },
+    template: '<App/>'
 })

@@ -114,21 +114,21 @@
             SwiperGoodsList
         },
         created() {
-            this.axios.get(this.httpConfig.ApiBannerList)
+            this.axios.get(this.$apiConfig.ApiBannerList)
                 .then( config => {
                    this.bannerList = config.data;
                 })
                 .catch( error => {
                     console.log(error);
                 });
-            this.axios.get(this.httpConfig.ApiRecomList)
+            this.axios.get(this.$apiConfig.ApiRecomList)
                 .then( config => {
                     this.recommList = config.data;
                 })
                 .catch( error => {
                     console.log(error);
                 });
-            this.axios.get(this.httpConfig.ApiIndexGoodsList+'/1/10')
+            this.axios.get(this.$apiConfig.ApiIndexGoodsList+'/1/10')
                 .then( config => {
                     console.log(config.data);
                     this.goodsList = config.data;
