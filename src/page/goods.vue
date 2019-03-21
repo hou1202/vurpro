@@ -104,6 +104,8 @@
             </div>
         </div>
 
+        <GoodsBuySpec />
+
         <!--图片弹出加载-->
         <div class="open-img" v-show="imgUrl">
             <img :src="imgUrl" alt="" @click="closeImg"/>
@@ -117,6 +119,7 @@
 <script>
     import HeaderTitle from '../components/HeaderTitle'
     import SwiperGoodsList from '../components/SwiperGoodsList'
+    import GoodsBuySpec from '../components/GoodsBuySpec'
 
 
     export default {
@@ -161,7 +164,7 @@
         components: {
             HeaderTitle,
             SwiperGoodsList,
-
+            GoodsBuySpec,
         },
         created() {
             this.axios.get(this.$apiConfig.ApiGoodsDetail+'1')

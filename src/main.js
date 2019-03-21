@@ -15,6 +15,12 @@ Vue.use(VueAwesomeSwiper);
 /*apiConfig-接口文件*/
 import apiConfig from './router/apiConfig'        //加载API接口文件
 Vue.prototype.$apiConfig = apiConfig;              //定义接口使用
+/*lazyloader-懒图片加载*/
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad,{
+   error:require('./assets/error.png'),
+   loading:require('./assets/loading.gif'),
+});
 /*Axios*/
 import Axios from 'axios'
 Vue.prototype.axios = Axios;
