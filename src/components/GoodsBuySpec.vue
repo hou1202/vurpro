@@ -1,9 +1,9 @@
 <template>
     <div class="goods-spec">
         <div class="spec-header">
-            <img src="../assets/goods.jpg" alt="" />
+            <img v-lazy="baseInfo.img" alt="" />
             <div class="header-title">
-                <p>华为 HUAWEI P20 Pro 全面屏徕卡三摄游戏手机 6GB+128GB 亮黑色 全网通移动联通电信4G手机</p>
+                <p>{{baseInfo.title}}</p>
                 <p>￥2540.00</p>
                 <p>库存：2541</p>
             </div>
@@ -12,11 +12,15 @@
         <div class="spec-select">
             <div class="select-num">
                 <span>购买数量</span>
-                <i></i>
+                <i class="reduce"></i>
                 <input type="number" name="num" value="1" />
-                <i></i>
+                <i class="increase"></i>
             </div>
             <div class="select-goods">
+                <div class="select-option">
+                    <span>移动版</span>
+                    <input type="radio" name="spec_id" />
+                </div>
 
 
             </div>
@@ -26,7 +30,8 @@
 
 <script>
     export default {
-        name: "GoodsBuySpec"
+        name: "GoodsBuySpec",
+        props: ['sepcs','baseInfo']
     }
 </script>
 
@@ -83,6 +88,45 @@
         height:1.5rem;
         background:url(../assets/close.png) no-repeat;
         background-size: 0.5rem;
+    }
+    .goods-spec .spec-select {
+        padding:0.4rem 0;
+    }
+    .goods-spec .spec-select .select-num {
+        height:1rem;
+        line-height:1rem;
+        display:flex;
+    }
+    .goods-spec .spec-select .select-num span {
+        font-size:0.32rem;
+        color:#4a4a4a;
+        padding-right:0.4rem;
+    }
+    .goods-spec .spec-select .select-num i {
+        display:block;
+        width:0.6rem;
+        height:1rem;
+    }
+    i.increase {
+        background:url(../assets/increase.png) no-repeat center center;
+        background-size:0.4rem;
+    }
+    i.reduce {
+        background:url(../assets/reduce.png) no-repeat center center;
+        background-size:0.4rem;
+    }
+    .goods-spec .spec-select .select-num input {
+        width:1.6rem;
+        height:0.7rem;
+        line-height:0.7rem;
+        text-align:center;
+        font-size:0.32rem;
+        color:#4a4a4a;
+        padding:0 0.2rem;
+        margin:0 0.3rem;
+        background:#fff;
+        border:none;
+        border-bottom: 1px solid #ccc;
     }
 
 </style>

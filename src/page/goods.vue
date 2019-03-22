@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <GoodsBuySpec />
+        <GoodsBuySpec :sepcs="Spec" :baseInfo="GoodsBaseInfo"/>
 
         <!--图片弹出加载-->
         <div class="open-img" v-show="imgUrl">
@@ -183,6 +183,12 @@
         computed: {
             ContentSwiper() {   //相当于建立swiper实例化方法
                 return this.$refs.sContent.swiper
+            },
+            GoodsBaseInfo(){
+                return {
+                    img:this.Details.thumbnail,
+                    title:this.Details.title,
+                }
             }
         },
         methods:{
