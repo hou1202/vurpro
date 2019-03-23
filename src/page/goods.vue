@@ -99,10 +99,11 @@
                 <i class="icon-car"></i>
             </div>
             <div class="footer-right">
-                <button type="button">加入购物车</button>
+                <button type="button" @click="contTips">加入购物车</button>
                 <button type="button">立即购买</button>
             </div>
         </div>
+        <PopTips :opt="tipsOpt" v-show="tipsStatus"/>
 
         <GoodsBuySpec :sepcs="Spec" :baseInfo="GoodsBaseInfo"/>
 
@@ -120,6 +121,7 @@
     import HeaderTitle from '../components/HeaderTitle'
     import SwiperGoodsList from '../components/SwiperGoodsList'
     import GoodsBuySpec from '../components/GoodsBuySpec'
+    import PopTips from '../components/PopTips'
 
 
     export default {
@@ -158,6 +160,11 @@
                         }
                     }
                 },
+                tipsOpt: {
+                    title: 'imya',
+                    content: '这是的个测试数据',
+                },
+                tipsStatus:false,
 
             }
         },
@@ -165,6 +172,7 @@
             HeaderTitle,
             SwiperGoodsList,
             GoodsBuySpec,
+            PopTips,
         },
         created() {
             this.axios.get(this.$apiConfig.ApiGoodsDetail+'1')
@@ -217,6 +225,9 @@
             },
             closeImg() {        //关闭产品评论图
                 this.imgUrl = '';
+            },
+            contTips() {
+                this.tipsStatus = true;
             }
 
         },

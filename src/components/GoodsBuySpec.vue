@@ -12,18 +12,17 @@
         <div class="spec-select">
             <div class="select-num">
                 <span>购买数量</span>
-                <i class="reduce"></i>
-                <input type="number" name="num" value="1" />
-                <i class="increase"></i>
+                <i class="reduce" v-on:click="numReduce"></i>
+                <input type="number" name="num" v-model="buyNum" />
+                <i class="increase" @click="numIncrease"></i>
             </div>
             <div class="select-goods">
-                <div class="select-option">
-                    <span>移动版</span>
-                    <input type="radio" name="spec_id" />
-                </div>
-
-
+                    <div class="select-option" v-for="(item,index) in sepcs" :key="index" @click="selectOption">
+                        <span :class="{'option-active':isActive(index)}">{{item.name}}</span>
+                        <input type="radio" name="spec_id" />
+                    </div>
             </div>
+            <button type="button">确认</button>
         </div>
     </div>
 </template>
@@ -31,14 +30,39 @@
 <script>
     export default {
         name: "GoodsBuySpec",
-        props: ['sepcs','baseInfo']
+        props: ['sepcs','baseInfo'],
+        data() {
+            return {
+                buyNum:1,
+            }
+        },
+        methods: {
+            numReduce() {
+                if(this.buyNum > 1){
+                    return this.buyNum--
+                }
+            },
+            numIncrease() {
+                return this.buyNum++
+            },
+            isActive(index) {
+                if(index){
+                    return false
+                }
+                return true;
+            },
+            selectOption(){
+                return true
+            }
+        }
     }
+
 </script>
 
 <style scoped>
     .goods-spec {
         position: fixed;
-        bottom: 1.2rem;
+        bottom: 1.18rem;
         z-index: 90;
         background:#fff;
         width:100%;
@@ -87,10 +111,11 @@
         width:0.7rem;
         height:1.5rem;
         background:url(../assets/close.png) no-repeat;
-        background-size: 0.5rem;
+        background-size: 0.6rem;
     }
     .goods-spec .spec-select {
         padding:0.4rem 0;
+        text-align:center;
     }
     .goods-spec .spec-select .select-num {
         height:1rem;
@@ -127,6 +152,45 @@
         background:#fff;
         border:none;
         border-bottom: 1px solid #ccc;
+    }
+    .goods-spec .spec-select .select-goods{
+        padding:0.2rem 0;
+        overflow: hidden;
+    }
+    .goods-spec .spec-select .select-goods .select-option {
+        height:1rem;
+        float:left;
+        overflow: hidden;
+        padding:0 0.4rem 0.4rem 0;
+    }
+    .goods-spec .spec-select .select-goods .select-option span{
+        height:1rem;
+        line-height:1rem;
+        font-size:0.32rem;
+        color:#6d6d6d;
+        border:1px solid #6d6d6d;
+        border-radius:0.2rem;
+        padding:0.2rem 0.4rem;
+
+    }
+    .goods-spec .spec-select .select-goods .select-option input{
+        display: none;
+    }
+    .goods-spec .spec-select .select-goods .select-option .option-active{
+        color:#fff;
+        border-color:#cc5116;
+        background:#cc5116;
+    }
+    .goods-spec .spec-select button {
+        width:80%;
+        height:1rem;
+        color:#fff;
+        font-size:0.34rem;
+        letter-spacing: 0.2rem;
+        background: rgba(204, 81, 22, 0.9);
+        margin-top:0.5rem;
+        border:none;
+        border-radius:0.2rem;
     }
 
 </style>
