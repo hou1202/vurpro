@@ -103,9 +103,9 @@
                 <button type="button">立即购买</button>
             </div>
         </div>
-        <PopTips :opt="tipsOpt" v-show="tipsStatus"/>
 
-        <GoodsBuySpec :sepcs="Spec" :baseInfo="GoodsBaseInfo"/>
+
+        <GoodsBuySpec :specs="Spec" :baseInfo="GoodsBaseInfo"/>
 
         <!--图片弹出加载-->
         <div class="open-img" v-show="imgUrl">
@@ -121,8 +121,6 @@
     import HeaderTitle from '../components/HeaderTitle'
     import SwiperGoodsList from '../components/SwiperGoodsList'
     import GoodsBuySpec from '../components/GoodsBuySpec'
-    import PopTips from '../components/PopTips'
-
 
     export default {
         name: "goods",
@@ -160,11 +158,6 @@
                         }
                     }
                 },
-                tipsOpt: {
-                    title: 'imya',
-                    content: '这是的个测试数据',
-                },
-                tipsStatus:false,
 
             }
         },
@@ -172,7 +165,6 @@
             HeaderTitle,
             SwiperGoodsList,
             GoodsBuySpec,
-            PopTips,
         },
         created() {
             this.axios.get(this.$apiConfig.ApiGoodsDetail+'1')
@@ -226,9 +218,11 @@
             closeImg() {        //关闭产品评论图
                 this.imgUrl = '';
             },
-            contTips() {
-                this.tipsStatus = true;
-            }
+            contTips() {        //弹窗控制方法
+                this.$store.commit('TipsModule/showTips',{content:'这是一个store测试数据'});
+                this.$store.commit('TipsModule/delayedHideTips');
+            },
+
 
         },
     }

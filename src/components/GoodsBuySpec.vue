@@ -4,8 +4,8 @@
             <img v-lazy="baseInfo.img" alt="" />
             <div class="header-title">
                 <p>{{baseInfo.title}}</p>
-                <p>￥2540.00</p>
-                <p>库存：2541</p>
+                <p>￥{{price}}</p>
+                <p>库存：{{stock}}</p>
             </div>
             <i></i>
         </div>
@@ -16,13 +16,14 @@
                 <input type="number" name="num" v-model="buyNum" />
                 <i class="increase" @click="numIncrease"></i>
             </div>
+
             <div class="select-goods">
-                    <div class="select-option" v-for="(item,index) in sepcs" :key="index" @click="selectOption">
-                        <span :class="{'option-active':isActive(index)}">{{item.name}}</span>
-                        <input type="radio" name="spec_id" />
-                    </div>
+                <div class="select-option" v-for="(item,index) in specs" :key="index" @click="selectOption(index)">
+                    <span :class="{'option-active':isActive(index)}">{{item.name}}</span>
+                    <input type="radio" name="spec_id" :value="item.id" :id="'spec_'+item.id" :checked="{'checked':!isActive(index)}"/>
+                </div>
             </div>
-            <button type="button">确认</button>
+            <button type="button" @click="formButton">确认</button>
         </div>
     </div>
 </template>
@@ -30,18 +31,46 @@
 <script>
     export default {
         name: "GoodsBuySpec",
-        props: ['sepcs','baseInfo'],
+        props: ['specs','baseInfo'],
         data() {
             return {
-                buyNum:1,
+                buyNum: 1,
+                price: 0.00,
+                stock: 1
             }
         },
+        watched:{
+            price:function(){
+                this.price = this.$store.state.SelectGoodsSpec.price
+            }
+
+        },
+        created() {
+            console.log(this.specs);
+        },
+        activated() {
+            console.log(this.specs);
+            this.$store.commit('SelectGoodsSpec/setGoodsBaseInfo',{
+                id: this.specs[0].goods_id,
+                title: this.baseInfo.title,
+                thumbnail: this.baseInfo.thumbnail,
+                price: this.specs[0]['price'],
+                stock: this.specs[0]['stock'],
+                spec_id: this.specs[0]['id'],
+            })
+        },
         methods: {
+            /**
+             * 减少购物产品数量
+             * */
             numReduce() {
                 if(this.buyNum > 1){
                     return this.buyNum--
                 }
             },
+            /**
+             * 增加购物产品数量
+             * */
             numIncrease() {
                 return this.buyNum++
             },
@@ -51,9 +80,22 @@
                 }
                 return true;
             },
-            selectOption(){
-                return true
+            selectOption(index){
+                let $spec = this.specs[index];
+                /*this.price = $spec['price'];
+                this.stock = $spec['stock'];*/
+                console.log(this.$store.state.SelectGoodsSpec.num)
+                this.$store.commit('SelectGoodsSpec/setGoodsSpec',{
+                    price: $spec['price'],
+                    stock: $spec['stock'],
+                    spec_id: $spec['id'],
+                })
+
+            },
+            formButton() {
+                console.log(this.$store.state.SelectGoodsSpec.price);
             }
+
         }
     }
 

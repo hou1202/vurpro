@@ -4,8 +4,10 @@ import Vue from 'vue'
 import App from './App'
 /*vue-router*/
 import router from './router'
+
 /*vuex-store*/
 import store from '../store'
+
 /*flexibli-自适应方案*/
 import 'lib-flexible'                               //自动适应加载方案
 /*Swiper*/
@@ -61,5 +63,5 @@ new Vue({
     router,
     store,
     components: { App },
-    template: '<App/>'
+    template: '<App/>',
 })

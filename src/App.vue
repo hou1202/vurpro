@@ -1,13 +1,21 @@
 <template>
   <div id="app">
-    <!--<img src="./assets/logo.png">-->
+
     <router-view/>
+
+    <!--弹出提示信息加载-->
+    <PopTips />
   </div>
 </template>
 
 <script>
+    import PopTips from './components/PopTips'
+
     export default {
-        name: 'App'
+        name: 'App',
+        components: {
+            PopTips,      //提示信息组件
+        }
     }
 </script>
 

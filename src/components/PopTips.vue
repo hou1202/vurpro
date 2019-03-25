@@ -1,11 +1,12 @@
 <template>
-    <div class="pop-tips" v-if="popStatus">
+    <div class="pop-tips" v-show="conStatus">
+
         <div class="pop">
-            <h2 v-if="opt.title">{{opt.title}}</h2>
-            <p>{{opt.content}}</p>
+            <h2 v-if="title">{{title}}</h2>
+            <p>{{content}}</p>
             <div class="pop-button">
-                <button v-if="opt.confirm">确 认</button>
-                <button v-if="opt.cancel">取 消</button>
+                <button v-if="confirm" @click="tipsClick">确 认</button>
+                <button v-if="cancel" @click="tipsClick">取 消</button>
             </div>
         </div>
     </div>
@@ -14,32 +15,26 @@
 <script>
     export default {
         name: 'PopTips',
-        props: {
-            opt: {
-                type: Object,
-                default: function(){
-                    return {
-                        title: null,
-                        content: '',
-                        confirm: false,
-                        cancel:false,
-                    }
-                }
-            }
-        },
         data() {
             return {
-                popStatus:false,
+                title: '',
+                content: '',
+                confirm: false,
+                cancel: false,
             }
         },
         methods: {
+            tipsClick() {
+                return this.$store.commit('TipsModule/delayedHideTips',0)
+            }
+        },
+        computed: {
             conStatus() {
-                if(this.opt.content != ''){
-                    this.popStatus == true;
-                    setTimeout(function (){
-
-                    }, 5000);
-                }
+                this.title = this.$store.state.TipsModule.tipsTitle;
+                this.content = this.$store.state.TipsModule.tipsContent;
+                this.confirm = this.$store.state.TipsModule.tipsConfirm;
+                this.cancel = this.$store.state.TipsModule.tipsCancel;
+                return this.$store.state.TipsModule.popTipsStatus;
             }
         }
     }
