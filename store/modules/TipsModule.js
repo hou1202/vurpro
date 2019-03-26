@@ -51,7 +51,17 @@ const mutations = {
         if(data.cancel){
             state.tipsCancel = data.cancel;
         }
-        state.popTipsStatus =true
+        state.popTipsStatus =true;
+
+        if(!data.closed){   //是否自动关闭，默认自动关闭
+            let closeTime = 3000;
+            if(data.time){
+                closeTime = data.time;
+            }
+            setTimeout(function (){
+                state.popTipsStatus = false
+            }, closeTime);
+        }
     }
 };
 

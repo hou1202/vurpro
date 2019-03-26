@@ -99,13 +99,13 @@
                 <i class="icon-car"></i>
             </div>
             <div class="footer-right">
-                <button type="button" @click="contTips">加入购物车</button>
-                <button type="button">立即购买</button>
+                <button type="button" @click="contSpec('car')">加入购物车</button>
+                <button type="button" @click="contSpec('buy')">立即购买</button>
             </div>
         </div>
 
 
-        <GoodsBuySpec :specs="Spec" :baseInfo="GoodsBaseInfo"/>
+        <GoodsBuySpec :baseInfo="GoodsBaseInfo" :goodsId="Details.id"/>
 
         <!--图片弹出加载-->
         <div class="open-img" v-show="imgUrl">
@@ -128,7 +128,6 @@
             return {
                 Details: [],                //产品详情
                 Params: [],                 //产品参数
-                Spec: [],                   //产品规格
                 Comments: [],               //产品评论
                 isColl: false,              //是否收藏
                 paramOpen:false,            //产品参数展开控制
@@ -172,7 +171,6 @@
                     console.log(config);
                     this.Details = config.data.detail;
                     this.Params = config.data.params;
-                    this.Spec = config.data.spec;
                     this.Comments = config.data.comments;
                     this.isColl = config.data.isColl;
                 })
@@ -192,14 +190,22 @@
             }
         },
         methods:{
-            ParamClick() {      //产品参数切换
+            /**
+             * 产品参数显示 / 隐藏切换
+             * */
+            ParamClick() {
                 this.paramOpen = !this.paramOpen;
             },
-            agreeClick(event) {     //评论点赞
+            /**
+             * 评论点赞
+             * */
+            agreeClick(event) {
                 event.target.classList.add('agree_active');
-
             },
-            contentClick(event) {           //产品详情标题切换事件
+            /**
+             * 产品详情标题切换事件
+             * */
+            contentClick(event) {
                 if(event.currentTarget.id === 'content'){
                     this.conActive = true;
                     this.comActive = false;
@@ -212,15 +218,24 @@
                 }
 
             },
-            openImg(event) {    //放大产品评论图
+            /**
+             * 放大产品评论图
+             * */
+            openImg(event) {
                 this.imgUrl = event.currentTarget.src;
             },
-            closeImg() {        //关闭产品评论图
+            /**
+            * 关闭产品评论图
+            * */
+            closeImg() {
                 this.imgUrl = '';
             },
-            contTips() {        //弹窗控制方法
-                this.$store.commit('TipsModule/showTips',{content:'这是一个store测试数据'});
-                this.$store.commit('TipsModule/delayedHideTips');
+            /**
+             * 规格面板控制*/
+            contSpec(type) {
+                this.$store.commit('SelectGoodsSpec/setSpecType',type);
+                this.$store.commit('SelectGoodsSpec/setSpecStatus');
+                console.log(this.$store.state.SelectGoodsSpec.specType)
             },
 
 

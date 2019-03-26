@@ -1,5 +1,5 @@
 <template>
-    <div class="goods-spec">
+    <div class="goods-spec" v-if="specStatus">
         <div class="spec-header">
             <img v-lazy="baseInfo.img" alt="" />
             <div class="header-title">
@@ -7,20 +7,20 @@
                 <p>￥{{price}}</p>
                 <p>库存：{{stock}}</p>
             </div>
-            <i></i>
+            <i @click="closeSpec"></i>
         </div>
         <div class="spec-select">
             <div class="select-num">
                 <span>购买数量</span>
-                <i class="reduce" v-on:click="numReduce"></i>
-                <input type="number" name="num" v-model="buyNum" />
-                <i class="increase" @click="numIncrease"></i>
+                <i class="reduce" @click="numChange('reduce')"></i>
+                <input type="number" name="num" v-model.number="buyNum" @input.lazy="watchNum" />
+                <i class="increase" @click="numChange('increase')"></i>
             </div>
 
             <div class="select-goods">
                 <div class="select-option" v-for="(item,index) in specs" :key="index" @click="selectOption(index)">
-                    <span :class="{'option-active':isActive(index)}">{{item.name}}</span>
-                    <input type="radio" name="spec_id" :value="item.id" :id="'spec_'+item.id" :checked="{'checked':!isActive(index)}"/>
+                    <span :class="{'option-active': (isActive==index)}" >{{item.name}}</span>
+                    <input type="radio" name="spec_id" :value="item.id" :checked="{'checked': (isActive==index)}"/>
                 </div>
             </div>
             <button type="button" @click="formButton">确认</button>
@@ -31,70 +31,103 @@
 <script>
     export default {
         name: "GoodsBuySpec",
-        props: ['specs','baseInfo'],
+        props: ['specs','baseInfo','goodsId'],
         data() {
             return {
                 buyNum: 1,
                 price: 0.00,
-                stock: 1
+                stock: 1,
+                isActive: 0,
             }
-        },
-        watched:{
-            price:function(){
-                this.price = this.$store.state.SelectGoodsSpec.price
-            }
-
         },
         created() {
-            console.log(this.specs);
+            setTimeout(()=>{
+                this.axios.get(this.$apiConfig.ApiGoodsSpec+this.goodsId)
+                    .then( config => {
+                        this.$store.commit('SelectGoodsSpec/setGoodsBaseInfo',{
+                            title: this.baseInfo.title,
+                            thumbnail: this.baseInfo.thumbnail,
+                            id: config.data[0].goods_id,
+                            price: config.data[0].price,
+                            stock: config.data[0].stock,
+                            spec_id: config.data[0].id,
+                        });
+                        this.price = this.$store.state.SelectGoodsSpec.price;
+                        this.stock = this.$store.state.SelectGoodsSpec.stock;
+                    })
+                    .catch( error => {
+                        console.log(error);
+                    })
+            },1000);
+
         },
-        activated() {
-            console.log(this.specs);
-            this.$store.commit('SelectGoodsSpec/setGoodsBaseInfo',{
-                id: this.specs[0].goods_id,
-                title: this.baseInfo.title,
-                thumbnail: this.baseInfo.thumbnail,
-                price: this.specs[0]['price'],
-                stock: this.specs[0]['stock'],
-                spec_id: this.specs[0]['id'],
-            })
+        computed: {
+            /**
+             * 控制规格面板状态
+             * */
+            specStatus(){
+                return this.$store.state.SelectGoodsSpec.specStatus
+            },
         },
         methods: {
             /**
-             * 减少购物产品数量
+             * 增减购物产品数量
              * */
-            numReduce() {
-                if(this.buyNum > 1){
-                    return this.buyNum--
+            numChange($type) {
+                if($type === 'reduce' && this.$store.state.SelectGoodsSpec.num > 1){
+                    //减少购物产品数量
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{type:'reduce'})
+                }else if($type === 'increase' && this.$store.state.SelectGoodsSpec.num < this.$store.state.SelectGoodsSpec.stock) {
+                    //增加购物产品数量
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{type:'increase'});
                 }
+                return this.buyNum = this.$store.state.SelectGoodsSpec.num
             },
+
             /**
-             * 增加购物产品数量
+             * 监听输入购物产品数量
              * */
-            numIncrease() {
-                return this.buyNum++
-            },
-            isActive(index) {
-                if(index){
-                    return false
+            watchNum(){
+                if(this.buyNum < 1){
+                    this.$store.commit('TipsModule/showTips',{content:'已经不能再少了'});
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:1});
+                    this.buyNum = 1;
+                } else if (parseInt(this.buyNum) > parseInt(this.$store.state.SelectGoodsSpec.stock)){
+                    this.$store.commit('TipsModule/showTips',{content:'已经不能再多了'});
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.$store.state.SelectGoodsSpec.stock});
+                    this.buyNum = parseInt(this.$store.state.SelectGoodsSpec.stock);
+                } else {
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.buyNum});
                 }
-                return true;
             },
+
+            /**
+             * 关闭规格面板
+             * */
+            closeSpec(){
+              this.$store.commit('SelectGoodsSpec/setSpecStatus');
+            },
+
+            /**
+             * 选择产品规格
+             * */
             selectOption(index){
                 let $spec = this.specs[index];
-                /*this.price = $spec['price'];
-                this.stock = $spec['stock'];*/
-                console.log(this.$store.state.SelectGoodsSpec.num)
                 this.$store.commit('SelectGoodsSpec/setGoodsSpec',{
                     price: $spec['price'],
                     stock: $spec['stock'],
                     spec_id: $spec['id'],
-                })
-
+                });
+                this.price = this.$store.state.SelectGoodsSpec.price;
+                this.stock = this.$store.state.SelectGoodsSpec.stock;
+                this.buyNum = 1;
+                this.isActive = index;      //设置首选项
             },
+
             formButton() {
-                console.log(this.$store.state.SelectGoodsSpec.price);
+
             }
+
 
         }
     }
