@@ -45,7 +45,6 @@ Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
   //响应拦截器
   Axios.interceptors.response.use(function(response){
       //对响应数据处理
-
       return response;
   }, function(error){
       //对响应错误处理

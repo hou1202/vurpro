@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link :to="dataUrl.goodsDetail" class="goods-list" v-for="(item, index) in goods.res" :key="index">
+        <router-link :to="'/goods/'+item.id" class="goods-list" v-for="(item, index) in goods.res" :key="index" >
             <img class="goods-banner" :src="item.thumbnail" alt="" />
             <div class="goods-title" v-if="Hot">HOT</div>
             <h2>{{item.title}}</h2>
@@ -17,17 +17,14 @@
         props: {
             goods:{
                 type:[Object,Array]
-            }
+            },
         },
         data() {
             return {
                 Hot:false,
                 Surplus : true,
-                dataUrl:{
-                    goodsDetail:"/goods"
-                }
             }
-        }
+        },
 
     }
 </script>

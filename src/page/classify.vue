@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="classify">
-            <a href="" v-for="item in classifyList">
-                <img src="../assets/nav.png" alt="" />
-                <p>Iphone</p>
-            </a>
+            <router-link :to="'/goodsClassifyList/'+item.id"  v-for="(item, index) in classifyList" :key="index">
+                <img :src="item.thumbnail" alt="" />
+                <p>{{item.title}}</p>
+            </router-link>
         </div>
 
         <!--底部导航-->
@@ -18,11 +18,20 @@
         name: 'classify',
         data() {
             return {
-                classifyList:[1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+                classifyList:[]
             }
         },
         components: {
             Footer
+        },
+        created() {
+            this.axios.get(this.$apiConfig.ApiClassify+'0')
+                .then( config => {
+                    this.classifyList = config.data;
+                })
+                .catch( error => {
+                    console.log(error);
+                })
         }
 
     }

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Layout from '@/page/layout'
 import Classify from '@/page/classify'
 import Goods from '@/page/goods'
+import GoodsClassifyList from '@/page/goodsClassifyList'
 
 Vue.use(Router)
 
@@ -19,9 +20,16 @@ export default new Router({
           component: Classify
       },
       {
-          path: '/goods',
+          path: '/goods/:id',
           name: 'Goods',
-          component: Goods
+          component: Goods,
+          props:true,
+      },
+      {
+          path: '/goodsClassifyList/:id',
+          name: 'GoodsClassifyList',
+          component: GoodsClassifyList,
+          props:true,
       },
   ]
 })

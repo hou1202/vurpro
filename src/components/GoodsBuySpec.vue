@@ -31,9 +31,10 @@
 <script>
     export default {
         name: "GoodsBuySpec",
-        props: ['specs','baseInfo','goodsId'],
+        props: ['baseInfo','goodsId'],
         data() {
             return {
+                specs: [],
                 buyNum: 1,
                 price: 0.00,
                 stock: 1,
@@ -54,6 +55,7 @@
                         });
                         this.price = this.$store.state.SelectGoodsSpec.price;
                         this.stock = this.$store.state.SelectGoodsSpec.stock;
+                        this.specs = config.data;
                     })
                     .catch( error => {
                         console.log(error);
@@ -125,6 +127,13 @@
             },
 
             formButton() {
+                if(this.$store.state.SelectGoodsSpec.specType === 'car'){
+
+                } else if (this.$store.state.SelectGoodsSpec.specType === 'buy') {
+
+                } else {
+                    this.$store.commit('TipsModule/showTips',{content:'信息有误，请重试'});
+                }
 
             }
 

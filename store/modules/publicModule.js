@@ -20,7 +20,7 @@ const mutations = {
 
 export default {
     //定义modules命名空间
-    //namespaced: true,
+    namespaced: true,
     state,
     getters,
     actions,

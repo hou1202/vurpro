@@ -6,7 +6,7 @@
         <div class="goods-banner">
             <swiper :options="swiperBanner">
                 <swiper-slide v-for="(item, index) in Details.banner" :key="index">
-                    <img :src="item">
+                    <img v-lazy="item">
                 </swiper-slide>
             </swiper>
         </div>
@@ -124,6 +124,7 @@
 
     export default {
         name: "goods",
+        props:['id'],
         data() {
             return {
                 Details: [],                //产品详情
@@ -166,9 +167,8 @@
             GoodsBuySpec,
         },
         created() {
-            this.axios.get(this.$apiConfig.ApiGoodsDetail+'1')
+            this.axios.get(this.$apiConfig.ApiGoodsDetail + this.id)
                 .then( config => {
-                    console.log(config);
                     this.Details = config.data.detail;
                     this.Params = config.data.params;
                     this.Comments = config.data.comments;
@@ -237,7 +237,6 @@
                 this.$store.commit('SelectGoodsSpec/setSpecStatus');
                 console.log(this.$store.state.SelectGoodsSpec.specType)
             },
-
 
         },
     }
