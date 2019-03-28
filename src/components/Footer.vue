@@ -27,7 +27,7 @@
                 urlData: {
                     home: '/',
                     classify: '/classify',
-                    car: '/',
+                    car: '/cart',
                     personal: '/'
 
 

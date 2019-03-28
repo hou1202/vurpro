@@ -4,6 +4,7 @@ import Layout from '@/page/layout'
 import Classify from '@/page/classify'
 import Goods from '@/page/goods'
 import GoodsClassifyList from '@/page/goodsClassifyList'
+import Cart from '@/page/cart'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
           name: 'GoodsClassifyList',
           component: GoodsClassifyList,
           props:true,
+      },
+      {
+          path: '/cart',
+          name: 'Cart',
+          component: Cart,
       },
   ]
 })

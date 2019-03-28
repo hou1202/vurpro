@@ -1,17 +1,21 @@
 <template>
     <div>
-        <router-link :to="'/goods/'+item.id" class="goods-list" v-for="(item, index) in goods.res" :key="index" >
-            <img class="goods-banner" :src="item.thumbnail" alt="" />
-            <div class="goods-title" v-if="Hot">HOT</div>
-            <h2>{{item.title}}</h2>
-            <p>{{item.info}}</p>
-            <span>￥{{item.sell_price}}</span>
-            <span>￥{{item.origin_price}}</span>
-        </router-link>
+        <div class="goods-box">
+            <router-link :to="'/goods/'+item.id" class="goods-list" v-for="(item, index) in goods.res" :key="index" >
+                <img class="goods-banner" :src="item.thumbnail" alt="" />
+                <div class="goods-title" v-if="Hot">HOT</div>
+                <h2>{{item.title}}</h2>
+                <p>{{item.info}}</p>
+                <span>￥{{item.sell_price}}</span>
+                <span>￥{{item.origin_price}}</span>
+            </router-link>
+        </div>
+
     </div>
 </template>
 
 <script>
+
     export default {
         name: 'GoodsList',
         props: {
@@ -25,12 +29,14 @@
                 Surplus : true,
             }
         },
-
     }
 </script>
 
 <style scoped>
     /*产品列表*/
+    .goods-box {
+        overflow: hidden;
+    }
     .goods-list {
         display:block;  /*a标签用*/
         width:50%;
