@@ -4,12 +4,7 @@
             <p class="cart-header">共计 0 件商品</p>
 
             <div class="cart-list">
-                <!--<swiper :options="swiperBanner">
-                    <swiper-slide v-for="(item, index) in Details.banner" :key="index">
-                        <img v-lazy="item">
-                    </swiper-slide>
-                </swiper>-->
-                <div class="cart-list-box">
+                <!--<div class="cart-list-box">
                     <div class="cart-list-box-left">
                         <i class="active-cart"></i>
                     </div>
@@ -29,7 +24,10 @@
                             <i></i>
                         </div>
                     </div>
-                </div>
+                </div>-->
+                <template v-for="(item, index) in cartGoods">
+                    <ShoppingCart :goods="item"/>
+                </template>
             </div>
 
             <!--购物车为空-->
@@ -48,11 +46,34 @@
 
 <script>
     import Footer from '../components/Footer.vue'
+    import ShoppingCart from '../components/ShoppingCart.vue'
     export default {
         name: 'cart',
         data() {
             return {
                 isEmpty:false,
+                cartGoods: [
+                    {
+                        thumbnail: '../assets/goods.jpg',
+                        title: '华为 HUAWEI P20 AI智慧徕卡双摄全面屏游戏手机 6GB+64GB 极光色',
+                        price: 2512.00,
+                        spec: '6+64G',
+                        stock: 256,
+                        num: 5,
+                        goods_id: 1,
+                        spec_id: 5
+                    },
+                    {
+                        thumbnail: '../assets/goods.jpg',
+                        title: '荣耀8X 千元屏霸 91%屏占比 2000万AI双摄 4GB+64GB 魅焰红 移动联通电信4G全面屏手机',
+                        price: 1520.00,
+                        spec: '8+128G',
+                        stock: 352,
+                        num: 2,
+                        goods_id: 2,
+                        spec_id: 15
+                    },
+                ],
                 swiperBanner: {
                     slidesPerView: "auto",
                     loop: true,
@@ -61,8 +82,23 @@
             }
         },
         components: {
-            Footer
+            Footer,
+            ShoppingCart
         },
+        created() {
+            if(!this.$store.state.UserInfo.loginStatus) {
+                return this.$router.push({name:'Layout'});
+            }
+            this.axios.get(this.$apiConfig.ApiShoppingCartList+'2')
+                .then( config => {
+                    this.$store.commit('ShoppingCart/setShoppingCartData',config.data);
+                    this.cartGoods = this.$store.state.ShoppingCart.item;
+                    console.log(this.cartGoods);
+                })
+                .catch( error => {
+                    console.log(error);
+                })
+        }
     }
 </script>
 
@@ -117,7 +153,7 @@
     .shopping-cart .cart .cart-list {
         margin-top:0.4rem;
     }
-    .shopping-cart .cart .cart-list .cart-list-box {
+   /* .shopping-cart .cart .cart-list .cart-list-box {
         width:100%;
         max-width:14rem;
         height:3rem;
@@ -167,7 +203,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 1; /* 这个表示要显示几行 */
+        -webkit-line-clamp: 1; !* 这个表示要显示几行 *!
         -webkit-box-orient: vertical;
     }
     .shopping-cart .cart .cart-list .cart-list-box .cart-list-box-right .cart-list-box-right-param {
@@ -183,7 +219,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 1; /* 这个表示要显示几行 */
+        -webkit-line-clamp: 1; !* 这个表示要显示几行 *!
         -webkit-box-orient: vertical;
     }
     .shopping-cart .cart .cart-list .cart-list-box .cart-list-box-right .cart-list-box-right-param p{
@@ -228,6 +264,6 @@
     .shopping-cart .cart .cart-list .cart-list-box .cart-list-box-right .cart-list-box-right-num i:last-child {
         background:url(../assets/reduce.png) no-repeat center center;
         background-size:0.4rem;
-    }
+    }*/
 
 </style>

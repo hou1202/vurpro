@@ -10,6 +10,7 @@ const config = {
     ApiGoodsSpec: '/api/index/goodsSpec/',                      //产品详情,param: goods_id
     ApiClassify: '/api/index/classify/',                        //分类列表
     ApiGoodsClassifyList: '/api/index/goodsClassifyList/',      //产品详情,param: id / page / limit
+    ApiShoppingCartList: '/api/index/shoppingCart/',        //购物车产品列表,param: user_id
 };
 
 export default config;
