@@ -47,6 +47,7 @@
         background:#fff;
         padding-top:0.2rem;
         box-shadow:-0.08rem -0.08rem 0.08rem #ccc;
+        z-index: 91;
     }
     .footer a{
         display: block;

@@ -1,7 +1,7 @@
 <template>
-    <div class="shopping-cart">
+    <div class="shopping-cart" :class="{'shopping-cart-empty' : isCartEmpty}">
         <div class="cart">
-            <p class="cart-header">共计 0 件商品</p>
+            <p class="cart-header">共计 {{cartGoodsTotal}} 件商品</p>
 
             <div class="cart-list">
                 <!--<div class="cart-list-box">
@@ -31,7 +31,7 @@
             </div>
 
             <!--购物车为空-->
-            <div class="cart-empty" v-if="isEmpty">
+            <div class="cart-empty" v-if="isCartEmpty">
                 <img src="../assets/null.png">
                 <router-link to="/">
                     <button>现在去逛逛吧~~~</button>
@@ -51,7 +51,6 @@
         name: 'cart',
         data() {
             return {
-                isEmpty:false,
                 cartGoods: [
                     {
                         thumbnail: '../assets/goods.jpg',
@@ -93,11 +92,18 @@
                 .then( config => {
                     this.$store.commit('ShoppingCart/setShoppingCartData',config.data);
                     this.cartGoods = this.$store.state.ShoppingCart.item;
-                    console.log(this.cartGoods);
                 })
                 .catch( error => {
                     console.log(error);
                 })
+        },
+        computed: {
+            cartGoodsTotal () {
+                return this.cartGoods.length;
+            },
+            isCartEmpty() {
+                return this.cartGoods.length ? false : true;
+            }
         }
     }
 </script>
@@ -112,8 +118,10 @@
         background: -moz-linear-gradient(rgba(204,127,21,0.2), rgba(222, 222, 222, 0.2) 50%);
         background: linear-gradient(rgba(204,127,21,0.2), rgba(222, 222, 222, 0.2) 50%);
         width:100%;
-        height:100%;
         overflow: hidden;
+    }
+    .shopping-cart-empty {
+        height:100%;
     }
     .shopping-cart .cart {
         height:100%;

@@ -179,6 +179,7 @@
         width:1.6rem;
         margin:0 0.2rem;
         height:0.6rem;
+        color:#4a4a4a;
         position: relative;
         top:-0.4rem;
         border:none;
