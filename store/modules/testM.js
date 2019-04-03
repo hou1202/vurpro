@@ -1,27 +1,28 @@
 /**
  * Created by Administrator on 2019/3/29.
  */
+
+
+
 const state = {
-    token: '',
-    userId: '2',
-    userName: '',
-    portrait: '',
-    userStatus: true,
-    loginStatus: true,
+    testNum: 2,
 };
 const getters = {
-
+    tes:state => {
+        return state.testNum
+    }
 };
 const actions = {
 
 };
 const mutations = {
 
+
 };
 
 export default {
     //定义modules命名空间
-    namespaced: true,
+
     state,
     mutations,
     actions,

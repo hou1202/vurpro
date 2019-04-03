@@ -5,7 +5,9 @@
             <swiper-slide>
                 <div class="cart-list-box">
                     <div class="cart-list-box-left">
-                        <i class="active-cart"></i>
+                        <i
+                            :class="{ 'active-cart' : selectActive }"
+                            @click="selectCartGoods"></i>
                     </div>
                     <div class="cart-list-box-img">
                         <img :src="goods.thumbnail" />
@@ -37,9 +39,10 @@
 </template>
 
 <script>
+    import { mapState, mapGetters} from 'vuex'
     export default {
         name: 'ShoppingCart',
-        props:['goods'],
+        props:['goods', 'id'],
         data() {
             return {
                 buyNum:1,
@@ -72,7 +75,34 @@
                     this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.buyNum});
                 }
             },
+            //选择购物车产品
+            selectCartGoods() {
+                this.$store.dispatch('ShoppingCart/setCartProductsState',this.id);
+                /*this.selectActive = this.$store.state.ShoppingCart.item.find(pro => pro.id === this.id).state;*/
+            }
+        },
+        computed: {
+            ...mapGetters('ShoppingCart',{
+                getProductState: 'getProductState',
+            }),
+            selectActive() {
+                return this.getProductState(this.id);
+            }
+
+
+        },
+        watch:{
+            //监听产品选择状态
+            selectActive:{
+                handler:function(val) {
+                    return val;
+                },
+                deep:true
+            },
+
+
         }
+
 
     }
 </script>
@@ -180,6 +210,7 @@
         margin:0 0.2rem;
         height:0.6rem;
         color:#4a4a4a;
+        font-size:0.32rem;
         position: relative;
         top:-0.4rem;
         border:none;

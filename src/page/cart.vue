@@ -26,8 +26,16 @@
                     </div>
                 </div>-->
                 <template v-for="(item, index) in cartGoods">
-                    <ShoppingCart :goods="item"/>
+                    <ShoppingCart :goods="item" :id="item.id"/>
                 </template>
+            </div>
+
+            <div class="cart-total" v-if="!isCartEmpty">
+                <i :class="{'total-active' : allSelectStatus}" @click="allProductSelect"></i>
+                <div class="total-num">
+                    <p>合计： <span>{{totalProducts}}</span></p>
+                </div>
+                <button type="button">结 算</button>
             </div>
 
             <!--购物车为空-->
@@ -47,12 +55,13 @@
 <script>
     import Footer from '../components/Footer.vue'
     import ShoppingCart from '../components/ShoppingCart.vue'
+    import { mapState} from 'vuex'
     export default {
         name: 'cart',
         data() {
             return {
                 cartGoods: [
-                    {
+                    /*{
                         thumbnail: '../assets/goods.jpg',
                         title: '华为 HUAWEI P20 AI智慧徕卡双摄全面屏游戏手机 6GB+64GB 极光色',
                         price: 2512.00,
@@ -71,8 +80,11 @@
                         num: 2,
                         goods_id: 2,
                         spec_id: 15
-                    },
+                    },*/
                 ],
+                ...mapState('ShoppingCart',{
+                   cartProductsList:'cartProductsList',
+                }),
                 swiperBanner: {
                     slidesPerView: "auto",
                     loop: true,
@@ -85,26 +97,56 @@
             ShoppingCart
         },
         created() {
+            //判断用户是否登录
             if(!this.$store.state.UserInfo.loginStatus) {
                 return this.$router.push({name:'Layout'});
             }
+            //this.$store.dispatch('ShoppingCart/getShoppingCartData');
+            //this.$store.dispatch('ShoppingCart/setCartProductsState',this.id);
+
+            //获取用户购物车产品数据
             this.axios.get(this.$apiConfig.ApiShoppingCartList+'2')
                 .then( config => {
                     this.$store.commit('ShoppingCart/setShoppingCartData',config.data);
-                    this.cartGoods = this.$store.state.ShoppingCart.item;
+                    this.cartGoods = this.$store.state.ShoppingCart.cartProductsList;
+
                 })
                 .catch( error => {
                     console.log(error);
                 })
         },
+        watch: {
+            /*cartGoods() {
+                this.$store.dispatch('ShoppingCart/getShoppingCartData');
+                console.log(112);
+                return this.$store.state.ShoppingCart.cartProductsList;
+            }*/
+            cartProductsList() {
+                //this.$store.dispatch('ShoppingCart/getShoppingCartData');
+                console.log(this.cartProductsList);
+            }
+        },
         computed: {
-            cartGoodsTotal () {
-                return this.cartGoods.length;
+            cartGoodsTotal () {     //购物车产品数量
+                return this.$store.state.ShoppingCart.cartProductsList.length;
             },
-            isCartEmpty() {
-                return this.cartGoods.length ? false : true;
+            isCartEmpty() {         //购物车是否为空
+                return this.$store.state.ShoppingCart.cartProductsList.length ? false : true;
+            },
+            totalProducts () {      //产品总价格
+                return this.$store.state.ShoppingCart.totalProduct;
+            },
+            allSelectStatus() {     //产品全选状态控制
+                return this.$store.state.ShoppingCart.allSelect;
+            }
+
+        },
+        methods: {
+            allProductSelect () {   //产品全选操作
+                this.$store.dispatch('ShoppingCart/setCartProductsState',-1);
             }
         }
+
     }
 </script>
 
@@ -125,7 +167,7 @@
     }
     .shopping-cart .cart {
         height:100%;
-        padding:1.4rem 0.4rem 1.8rem 0.4rem;
+        padding:1.4rem 0.4rem 3rem 0.4rem;
     }
     .shopping-cart .cart .cart-header{
         height:0.8rem;
@@ -161,6 +203,52 @@
     .shopping-cart .cart .cart-list {
         margin-top:0.4rem;
     }
+    .shopping-cart .cart .cart-total {
+        width:100%;
+        height:1.2rem;
+        position: fixed;
+        left:0;
+        bottom: 1.7rem;
+        background:#fff;
+        z-index: 96;
+        padding-left:1rem;
+        border-top:1px solid #e4e4e4;
+    }
+    .shopping-cart .cart .cart-total i{
+        display:block;
+        width:0.6rem;
+        height:1.2rem;
+        background:url(../assets/circle.png) no-repeat center center;
+        background-size:0.4rem ;
+        float:left;
+    }
+    .shopping-cart .cart .cart-total i.total-active{
+        background:url(../assets/circle-active.png) no-repeat center center;
+        background-size:0.4rem;
+    }
+    .shopping-cart .cart .cart-total .total-num{
+        float:left;
+        padding-left:0.6rem;
+    }
+    .shopping-cart .cart .cart-total .total-num p{
+        line-height:1.2rem;
+        font-size:0.32rem;
+    }
+    .shopping-cart .cart .cart-total .total-num span {
+        color:#cc7f15;
+    }
+    .shopping-cart .cart .cart-total button{
+        float:right;
+        height:1rem;
+        width:2.6rem;
+        color:#fff;
+        font-size:0.34rem;
+        background:#cc7f15;
+        border:none;
+        border-radius:1.2rem;
+        margin-top:0.1rem;
+    }
+
    /* .shopping-cart .cart .cart-list .cart-list-box {
         width:100%;
         max-width:14rem;
