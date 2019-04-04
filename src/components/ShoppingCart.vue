@@ -20,9 +20,9 @@
                         </div>
                         <p class="param-stock">库存： {{goods.stock}}</p>
                         <div class="cart-list-box-right-num">
-                            <i></i>
-                            <input type="number" v-model="buyNum" />
-                            <i></i>
+                            <i @click="numChange('increase')"></i>
+                            <input type="number" v-model="buyNum" @input="watchNum" />
+                            <i @click="numChange('reduce')"></i>
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
         props:['goods', 'id'],
         data() {
             return {
-                buyNum:1,
+                buyNum: 1,
                 CartOption: {
                     slidesPerView: "auto",
                     loop: false,
@@ -56,7 +56,7 @@
             }
         },
         created() {
-            this.buyNum = this.goods.num;
+
         },
         methods: {
             /**
@@ -65,16 +65,29 @@
             watchNum(){
                 if(this.buyNum < 1){
                     this.$store.commit('TipsModule/showTips',{content:'已经不能再少了'});
-                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:1});
                     this.buyNum = 1;
-                } else if (parseInt(this.buyNum) > parseInt(this.$store.state.SelectGoodsSpec.stock)){
+                } else if (parseInt(this.buyNum) > parseInt(this.getProductItem(this.id).stock)){
                     this.$store.commit('TipsModule/showTips',{content:'已经不能再多了'});
-                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.$store.state.SelectGoodsSpec.stock});
-                    this.buyNum = parseInt(this.$store.state.SelectGoodsSpec.stock);
+                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, num:this.getProductItem(this.id).stock});
                 } else {
-                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.buyNum});
+                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, num:this.buyNum});
                 }
             },
+
+            /**
+             * 增减购物产品数量
+             * */
+            numChange($type) {
+                if($type === 'reduce' && this.buyNum > 1){
+                    //减少购物产品数量
+                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, type:'reduce'})
+                }else if($type === 'increase' && parseInt(this.getProductItem(this.id).num) < parseInt(this.getProductItem(this.id).stock)) {
+                    //增加购物产品数量
+                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, type:'increase'})
+                }
+                //return this.buyNum = this.$store.state.SelectGoodsSpec.num
+            },
+
             //选择购物车产品
             selectCartGoods() {
                 this.$store.dispatch('ShoppingCart/setCartProductsState',this.id);
@@ -84,21 +97,31 @@
         computed: {
             ...mapGetters('ShoppingCart',{
                 getProductState: 'getProductState',
+                getProductItem:'getProductItem'
             }),
             selectActive() {
                 return this.getProductState(this.id);
+            },
+            getProductNum(){
+                return this.buyNum = this.getProductItem(this.id).num;
             }
 
 
         },
         watch:{
             //监听产品选择状态
-            selectActive:{
+            /*selectActive:{
                 handler:function(val) {
+                    console.log(val);
                     return val;
                 },
                 deep:true
-            },
+            },*/
+
+            getProductNum(){
+                return this.getProductNum;
+            }
+
 
 
         }

@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2019/3/29.
  */
-
+import axios from 'axios'
 
 const state = {
     cartProductsList:[],
@@ -12,6 +12,10 @@ const getters = {
     getProductState:(state) => (id) => {
         //return state.cartProductsList.find(product => product.id === id);
         return state.cartProductsList.find(product => product.id === id).state
+    },
+    getProductsList:state => state.cartProductsList,
+    getProductItem:(state) => (id) => {
+        return state.cartProductsList.find(product => product.id === id)
     },
 
 
@@ -55,14 +59,30 @@ const actions = {
 
     },
 
-    /*getShoppingCartData({commit, state, rootState}){
+    /**
+     * 获取购物车产品数据
+     * rootState    根state
+     * */
+    getShoppingCartData({commit, rootState}){
         //rootState代表根state
-        console.log(rootState.UserInfo.userId);
-        axios.get(this.$apiConfig.ApiShoppingCartList+rootState.UserInfo.userId).then( res => {
+        axios.get(rootState.Api.ApiShoppingCartList+rootState.UserInfo.userId).then( res => {
             commit('setShoppingCartData',res.data);
-            console.log(res);
         })
-    }*/
+    },
+
+    /**设置购物车产品数量*/
+    setCartProductsNum({commit, getters}, data) {
+        if(data.type === 'reduce' && getters.getProductItem(data.id).num > 1){
+            getters.getProductItem(data.id).num -= 1;
+
+        }else if(data.type === 'increase' && parseInt(getters.getProductItem(data.id).num) < parseInt(getters.getProductItem(data.id).stock)) {
+            getters.getProductItem(data.id).num = parseInt(getters.getProductItem(data.id).num)+1;
+
+        }else if(data.num){
+            getters.getProductItem(data.id).num = data.num;
+        }
+        commit('productsPriceTotal');
+    }
 };
 const mutations = {
     //设置购物车产品数据

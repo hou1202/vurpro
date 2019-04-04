@@ -55,36 +55,11 @@
 <script>
     import Footer from '../components/Footer.vue'
     import ShoppingCart from '../components/ShoppingCart.vue'
-    import { mapState} from 'vuex'
+    import { mapState, mapGetters} from 'vuex'
     export default {
         name: 'cart',
         data() {
             return {
-                cartGoods: [
-                    /*{
-                        thumbnail: '../assets/goods.jpg',
-                        title: '华为 HUAWEI P20 AI智慧徕卡双摄全面屏游戏手机 6GB+64GB 极光色',
-                        price: 2512.00,
-                        spec: '6+64G',
-                        stock: 256,
-                        num: 5,
-                        goods_id: 1,
-                        spec_id: 5
-                    },
-                    {
-                        thumbnail: '../assets/goods.jpg',
-                        title: '荣耀8X 千元屏霸 91%屏占比 2000万AI双摄 4GB+64GB 魅焰红 移动联通电信4G全面屏手机',
-                        price: 1520.00,
-                        spec: '8+128G',
-                        stock: 352,
-                        num: 2,
-                        goods_id: 2,
-                        spec_id: 15
-                    },*/
-                ],
-                ...mapState('ShoppingCart',{
-                   cartProductsList:'cartProductsList',
-                }),
                 swiperBanner: {
                     slidesPerView: "auto",
                     loop: true,
@@ -101,11 +76,11 @@
             if(!this.$store.state.UserInfo.loginStatus) {
                 return this.$router.push({name:'Layout'});
             }
-            //this.$store.dispatch('ShoppingCart/getShoppingCartData');
-            //this.$store.dispatch('ShoppingCart/setCartProductsState',this.id);
+            //处理异步获取购物车数据
+            this.$store.dispatch('ShoppingCart/getShoppingCartData');
 
             //获取用户购物车产品数据
-            this.axios.get(this.$apiConfig.ApiShoppingCartList+'2')
+            /*this.axios.get(this.$apiConfig.ApiShoppingCartList+'2')
                 .then( config => {
                     this.$store.commit('ShoppingCart/setShoppingCartData',config.data);
                     this.cartGoods = this.$store.state.ShoppingCart.cartProductsList;
@@ -113,18 +88,11 @@
                 })
                 .catch( error => {
                     console.log(error);
-                })
+                })*/
         },
         watch: {
-            /*cartGoods() {
-                this.$store.dispatch('ShoppingCart/getShoppingCartData');
-                console.log(112);
-                return this.$store.state.ShoppingCart.cartProductsList;
-            }*/
-            cartProductsList() {
-                //this.$store.dispatch('ShoppingCart/getShoppingCartData');
-                console.log(this.cartProductsList);
-            }
+
+
         },
         computed: {
             cartGoodsTotal () {     //购物车产品数量
@@ -138,7 +106,10 @@
             },
             allSelectStatus() {     //产品全选状态控制
                 return this.$store.state.ShoppingCart.allSelect;
-            }
+            },
+            ...mapGetters('ShoppingCart',{
+                cartGoods:'getProductsList'
+            }),
 
         },
         methods: {
