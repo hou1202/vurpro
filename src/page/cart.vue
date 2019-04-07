@@ -33,9 +33,9 @@
             <div class="cart-total" v-if="!isCartEmpty">
                 <i :class="{'total-active' : allSelectStatus}" @click="allProductSelect"></i>
                 <div class="total-num">
-                    <p>合计： <span>{{totalProducts}}</span></p>
+                    <p>合计： <span>￥{{totalProducts}}</span></p>
                 </div>
-                <button type="button">结 算</button>
+                <button type="button" @click="testClick">结 算</button>
             </div>
 
             <!--购物车为空-->
@@ -76,6 +76,9 @@
             if(!this.$store.state.UserInfo.loginStatus) {
                 return this.$router.push({name:'Layout'});
             }
+
+            this.$store.commit('ShoppingCart/setInitCart');
+
             //处理异步获取购物车数据
             this.$store.dispatch('ShoppingCart/getShoppingCartData');
 
@@ -115,6 +118,10 @@
         methods: {
             allProductSelect () {   //产品全选操作
                 this.$store.dispatch('ShoppingCart/setCartProductsState',-1);
+
+            },
+            testClick() {
+                console.log(this.cartGoods)
             }
         }
 

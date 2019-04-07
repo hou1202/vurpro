@@ -101,6 +101,11 @@ const mutations = {
         state.totalProduct = total;
     },
 
+    setInitCart(state) {
+        state.allSelect = false;
+        state.totalProduct = 0.00;
+    }
+
 
 
 };
