@@ -21,7 +21,7 @@
                         <p class="param-stock">库存： {{goods.stock}}</p>
                         <div class="cart-list-box-right-num">
                             <i @click="numChange('increase')"></i>
-                            <input type="number" v-model="buyNum" @input="watchNum" />
+                            <input type="number" v-model="buyNum"  />
                             <i @click="numChange('reduce')"></i>
                         </div>
                     </div>
@@ -59,20 +59,6 @@
 
         },
         methods: {
-            /**
-             * 监听输入购物产品数量
-             * */
-            watchNum(){
-                if(this.buyNum < 1){
-                    this.$store.commit('TipsModule/showTips',{content:'已经不能再少了'});
-                    this.buyNum = 1;
-                } else if (parseInt(this.buyNum) > parseInt(this.getProductItem(this.id).stock)){
-                    this.$store.commit('TipsModule/showTips',{content:'已经不能再多了'});
-                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, num:this.getProductItem(this.id).stock});
-                } else {
-                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, num:this.buyNum});
-                }
-            },
 
             /**
              * 增减购物产品数量
@@ -96,11 +82,10 @@
         },
         computed: {
             ...mapGetters('ShoppingCart',{
-                getProductState: 'getProductState',
                 getProductItem:'getProductItem'
             }),
             selectActive() {
-                return this.getProductState(this.id);
+                return this.getProductItem(this.id).state;
             },
             getProductNum(){
                 return this.buyNum = this.getProductItem(this.id).num;
@@ -109,17 +94,26 @@
 
         },
         watch:{
-            //监听产品选择状态
-            /*selectActive:{
-                handler:function(val) {
-                    console.log(val);
-                    return val;
-                },
-                deep:true
-            },*/
 
+            //监听获取购物产品数量
             getProductNum(){
                 return this.getProductNum;
+            },
+
+            /**
+             * 监听输入购物产品数量
+             * */
+            buyNum() {
+                if(parseInt(this.buyNum) < 1){
+                    this.$store.commit('TipsModule/showTips',{content:'已经不能再少了'});
+                    this.buyNum = 1;
+                } else if (parseInt(this.buyNum) > parseInt(this.getProductItem(this.id).stock)){
+                    this.$store.commit('TipsModule/showTips',{content:'已经不能再多了'});
+                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, num:this.getProductItem(this.id).stock});
+                } else {
+                    this.$store.dispatch('ShoppingCart/setCartProductsNum',{id:this.id, num:this.buyNum});
+                }
+
             }
 
 

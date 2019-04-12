@@ -9,14 +9,22 @@ const state = {
     allSelect: false,
 };
 const getters = {
-    getProductState:(state) => (id) => {
-        //return state.cartProductsList.find(product => product.id === id);
-        return state.cartProductsList.find(product => product.id === id).state
-    },
+
+    //获取购物车产品列表
     getProductsList:state => state.cartProductsList,
+
+    /**
+     * 获取指定购物车产品数据
+     * param    id  number  产品ID
+     * */
     getProductItem:(state) => (id) => {
         return state.cartProductsList.find(product => product.id === id)
     },
+    getTradeProductItem:(state) => {
+        return state.cartProductsList.filter(product => product.state === true);
+
+
+    }
 
 
 };
@@ -82,6 +90,19 @@ const actions = {
             getters.getProductItem(data.id).num = data.num;
         }
         commit('productsPriceTotal');
+    },
+
+    //初始化购物车
+    setInitCart({state, dispatch}) {
+        state.allSelect = false;
+        state.totalProduct = 0.00;
+
+        //有缓存数据直接读取缓存数据
+        /*if(state.cartProductsList.length === 0) {
+            dispatch('getShoppingCartData');
+        }*/
+        dispatch('getShoppingCartData');
+
     }
 };
 const mutations = {
@@ -101,14 +122,11 @@ const mutations = {
         state.totalProduct = total;
     },
 
-    setInitCart(state) {
-        state.allSelect = false;
-        state.totalProduct = 0.00;
-    }
 
 
 
 };
+
 
 export default {
     //定义modules命名空间
@@ -116,5 +134,5 @@ export default {
     state,
     mutations,
     actions,
-    getters
+    getters,
 }

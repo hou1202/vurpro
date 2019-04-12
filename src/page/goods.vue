@@ -96,7 +96,9 @@
             <div class="footer-left">
                 <i :class="isColl ? 'icon-coll-true' : 'icon-coll'"></i>
                 <i class="icon-share"></i>
-                <i class="icon-car"></i>
+                <router-link to="/cart" >
+                    <i class="icon-car"></i>
+                </router-link>
             </div>
             <div class="footer-right">
                 <button type="button" @click="contSpec('car')">加入购物车</button>

@@ -51,7 +51,7 @@
         },
         watch:{
             classifyId () {
-                this.axios.get(this.$apiConfig.ApiGoodsClassifyList + this.classifyId + '/0/5')
+                this.axios.get(this.$apiConfig.ApiGoodsClassifyList + this.classifyId + '/0/20')
                     .then(config => {
                         this.goods = config.data;
                     })

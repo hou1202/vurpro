@@ -4,27 +4,6 @@
             <p class="cart-header">共计 {{cartGoodsTotal}} 件商品</p>
 
             <div class="cart-list">
-                <!--<div class="cart-list-box">
-                    <div class="cart-list-box-left">
-                        <i class="active-cart"></i>
-                    </div>
-                    <div class="cart-list-box-img">
-                        <img src="../assets/goods.jpg" />
-                    </div>
-                    <div class="cart-list-box-right">
-                        <h2>华为 HUAWEI P20 Pro 全面屏徕卡三摄游戏手机亮黑色 全网通移动联通电信4G手机全面屏徕卡三摄游戏手机 6GB+128GB 亮黑色</h2>
-                        <div class="cart-list-box-right-param">
-                            <p>￥2520.00</p>
-                            <p>6+64G</p>
-                        </div>
-                        <p class="param-stock">库存： 256</p>
-                        <div class="cart-list-box-right-num">
-                            <i></i>
-                            <input type="number" value="1" />
-                            <i></i>
-                        </div>
-                    </div>
-                </div>-->
                 <template v-for="(item, index) in cartGoods">
                     <ShoppingCart :goods="item" :id="item.id"/>
                 </template>
@@ -35,7 +14,7 @@
                 <div class="total-num">
                     <p>合计： <span>￥{{totalProducts}}</span></p>
                 </div>
-                <button type="button" @click="testClick">结 算</button>
+                <button type="button" @click="cartBalance">结 算</button>
             </div>
 
             <!--购物车为空-->
@@ -77,21 +56,9 @@
                 return this.$router.push({name:'Layout'});
             }
 
-            this.$store.commit('ShoppingCart/setInitCart');
+            //初始化购物车
+            this.$store.dispatch('ShoppingCart/setInitCart');
 
-            //处理异步获取购物车数据
-            this.$store.dispatch('ShoppingCart/getShoppingCartData');
-
-            //获取用户购物车产品数据
-            /*this.axios.get(this.$apiConfig.ApiShoppingCartList+'2')
-                .then( config => {
-                    this.$store.commit('ShoppingCart/setShoppingCartData',config.data);
-                    this.cartGoods = this.$store.state.ShoppingCart.cartProductsList;
-
-                })
-                .catch( error => {
-                    console.log(error);
-                })*/
         },
         watch: {
 
@@ -99,10 +66,10 @@
         },
         computed: {
             cartGoodsTotal () {     //购物车产品数量
-                return this.$store.state.ShoppingCart.cartProductsList.length;
+                return this.cartGoods.length;
             },
             isCartEmpty() {         //购物车是否为空
-                return this.$store.state.ShoppingCart.cartProductsList.length ? false : true;
+                return this.cartGoods.length ? false : true;
             },
             totalProducts () {      //产品总价格
                 return this.$store.state.ShoppingCart.totalProduct;
@@ -120,8 +87,21 @@
                 this.$store.dispatch('ShoppingCart/setCartProductsState',-1);
 
             },
-            testClick() {
-                console.log(this.cartGoods)
+
+            //结算
+            cartBalance() {
+                let isBuy = false;
+                for(let m=0;m < this.cartGoods.length;m++){
+                    if(this.cartGoods[m].state === true){
+                        isBuy = true;
+                        break;
+                    }
+                }
+                if(isBuy === true){
+                    return this.$router.push({name:'Balance'});
+                }else{
+                    return this.$store.commit('TipsModule/showTips',{content:'请选择需要下单的产品'});
+                }
             }
         }
 
@@ -132,6 +112,10 @@
     body, #app{
         height:100%;
     }
+</style>
+
+<style scoped>
+
     .shopping-cart {
         background: -webkit-linear-gradient(rgba(204,127,21,0.2), rgba(222, 222, 222, 0.2) 50%);
         background: -o-linear-gradient(rgba(204,127,21,0.2), rgba(222, 222, 222, 0.2) 50%);

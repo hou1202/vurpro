@@ -13,7 +13,7 @@
             <div class="select-num">
                 <span>购买数量</span>
                 <i class="reduce" @click="numChange('reduce')"></i>
-                <input type="number" name="num" v-model.number="buyNum" @input.lazy="watchNum" />
+                <input type="number" name="num" v-model="buyNum" />
                 <i class="increase" @click="numChange('increase')"></i>
             </div>
 
@@ -71,6 +71,24 @@
                 return this.$store.state.SelectGoodsSpec.specStatus
             },
         },
+        watch:{
+            /**
+             * 监听输入购物产品数量
+             * */
+            buyNum(){
+                if(parseInt(this.buyNum) < 1){
+                    this.$store.commit('TipsModule/showTips',{content:'已经不能再少了'});
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:1});
+                    this.buyNum = 1;
+                } else if (parseInt(this.buyNum) > parseInt(this.$store.state.SelectGoodsSpec.stock)){
+                    this.$store.commit('TipsModule/showTips',{content:'已经不能再多了'});
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.$store.state.SelectGoodsSpec.stock});
+                    this.buyNum = parseInt(this.$store.state.SelectGoodsSpec.stock);
+                } else {
+                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.buyNum});
+                }
+            },
+        },
         methods: {
             /**
              * 增减购物产品数量
@@ -84,23 +102,6 @@
                     this.$store.commit('SelectGoodsSpec/setGoodsNum',{type:'increase'});
                 }
                 return this.buyNum = this.$store.state.SelectGoodsSpec.num
-            },
-
-            /**
-             * 监听输入购物产品数量
-             * */
-            watchNum(){
-                if(this.buyNum < 1){
-                    this.$store.commit('TipsModule/showTips',{content:'已经不能再少了'});
-                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:1});
-                    this.buyNum = 1;
-                } else if (parseInt(this.buyNum) > parseInt(this.$store.state.SelectGoodsSpec.stock)){
-                    this.$store.commit('TipsModule/showTips',{content:'已经不能再多了'});
-                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.$store.state.SelectGoodsSpec.stock});
-                    this.buyNum = parseInt(this.$store.state.SelectGoodsSpec.stock);
-                } else {
-                    this.$store.commit('SelectGoodsSpec/setGoodsNum',{num:this.buyNum});
-                }
             },
 
             /**
