@@ -2,7 +2,6 @@
  * Created by Administrator on 2019/3/21.
  */
 import Vue from 'vue'
-import axios from 'axios'
 import Vuex from 'vuex'
 import vuexPersistedState from 'vuex-persistedstate'
 import publicModule from './modules/publicModule'
@@ -32,12 +31,13 @@ export default new Vuex.Store({
     //持久化存储
     plugins:[vuexPersistedState({
         storage:window.localStorage,    //默认值为localStorage
-        /*reducer(state){
+        reducer:val => {
             return {
-                cartProductsList:state.ShoppingCart.cartProductsList,
-                totalProduct:state.ShoppingCart.totalProduct,
+                cartProductsList:val.ShoppingCart.cartProductsList,
+                totalProduct:val.ShoppingCart.totalProduct,
+
             }
-        }*/
+        }
 
     })],
 })

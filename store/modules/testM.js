@@ -16,6 +16,9 @@ const actions = {
 
 };
 const mutations = {
+    testMut(state) {
+        state.testNum = 5;
+    }
 
 
 };

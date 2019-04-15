@@ -127,7 +127,7 @@
 
 <script>
     import HeaderTitle from '../components/HeaderTitle'
-    import {mapGetters} from 'vuex'
+    import {mapState, mapGetters} from 'vuex'
 
     export default {
         name: 'balance',
@@ -144,7 +144,8 @@
             ...mapGetters('ShoppingCart',{
                 TradeProductItem:'getTradeProductItem',
                 getProductsList:'getProductsList',
-            })
+            }),
+
         },
         methods: {
             testClick() {
