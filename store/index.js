@@ -14,6 +14,14 @@ import testM from './modules/testM'
 
 
 Vue.use(Vuex);
+const vuexPersisted = new vuexPersistedState({
+    key: 'vurproVuex',
+    storage: window.localStorage,
+    reducer: state => ({
+        cartProductsList:state.ShoppingCart.cartProductsList,
+        totalProduct:state.ShoppingCart.totalProduct,
+    }),
+});
 
 export default new Vuex.Store({
     modules: {
@@ -29,15 +37,15 @@ export default new Vuex.Store({
     //strict:使 Vuex store 进入严格模式，在严格模式下，任何 mutation 处理函数以外修改 Vuex state 都会抛出错误。默认值: false
     strict: false,
     //持久化存储
-    plugins:[vuexPersistedState({
+    plugins:[vuexPersisted]
+    /*plugins:[vuexPersistedState({
         storage:window.localStorage,    //默认值为localStorage
-        reducer:val => {
+        /!*reducer:val => {
             return {
                 cartProductsList:val.ShoppingCart.cartProductsList,
                 totalProduct:val.ShoppingCart.totalProduct,
-
             }
-        }
+        }*!/
 
-    })],
+    })],*/
 })

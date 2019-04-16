@@ -20,7 +20,9 @@ const getters = {
     getProductItem:(state) => (id) => {
         return state.cartProductsList.find(product => product.id === id)
     },
+    //获取选中购物车产品列表
     getTradeProductItem:(state) => {
+        console.log(state);
         return state.cartProductsList.filter(product => product.state === true);
 
 
@@ -98,10 +100,10 @@ const actions = {
         state.totalProduct = 0.00;
 
         //有缓存数据直接读取缓存数据
-        /*if(state.cartProductsList.length === 0) {
+        if(state.cartProductsList.length === 0) {
             dispatch('getShoppingCartData');
-        }*/
-        dispatch('getShoppingCartData');
+        }
+        //dispatch('getShoppingCartData');
 
     }
 };

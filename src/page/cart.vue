@@ -85,7 +85,6 @@
         methods: {
             allProductSelect () {   //产品全选操作
                 this.$store.dispatch('ShoppingCart/setCartProductsState',-1);
-
             },
 
             //结算

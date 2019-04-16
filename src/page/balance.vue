@@ -117,7 +117,7 @@
 
         <!--立即支付-->
         <div class="balance-payment">
-            <p>支付金额： <span>￥25.00</span></p>
+            <p>支付金额： <span>￥{{totalProduct}}</span></p>
             <button type="button" @click="testClick">立 即 支 付</button>
         </div>
 
@@ -144,14 +144,27 @@
             ...mapGetters('ShoppingCart',{
                 TradeProductItem:'getTradeProductItem',
                 getProductsList:'getProductsList',
+
             }),
+            /*...mapGetters('ShoppingCart',[
+                'getTradeProductItem',
+                'getProductsList',
+            ]),*/
+            ...mapState('ShoppingCart',{
+                totalProduct:'totalProduct',
+            })
+
+        },
+        watch: {
 
         },
         methods: {
             testClick() {
-                console.log(this.TradeProductItem);
-                console.log(this.$store.state.ShoppingCart.totalProduct);
-                console.log(this.$store.state.ShoppingCart.allSelect);
+                //console.log(this.TradeProductItem);
+                console.log(this.totalProduct);
+                console.log(this.$store.state.totalProduct);
+                console.log(this.$store.getters.getTradeProductItem);
+                //console.log(this.$store.state.ShoppingCart.allSelect);
             },
             selectActive(index) {
                 return this.isActive = index;
