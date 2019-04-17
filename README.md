@@ -805,6 +805,17 @@
             ....
         })
         
+    辅助函数使用说明(带有命名空间)
+        import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+        computed: {
+            ...mapState({
+                testState: state => state.moduleName.testState,
+            }),
+            ...mapGetters({
+                testGetter: 'moduleName/testGetter',
+            })
+        }
+        
     使用
         由于 Vuex 的状态存储是响应式的，从 store 实例中读取状态最简单的方法就是在计算属性中返回某个状态
         <div>

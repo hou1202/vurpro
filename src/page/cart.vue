@@ -12,7 +12,7 @@
             <div class="cart-total" v-if="!isCartEmpty">
                 <i :class="{'total-active' : allSelectStatus}" @click="allProductSelect"></i>
                 <div class="total-num">
-                    <p>合计： <span>￥{{totalProducts}}</span></p>
+                    <p>合计： <span>￥{{productsTotal}}</span></p>
                 </div>
                 <button type="button" @click="cartBalance">结 算</button>
             </div>
@@ -77,8 +77,9 @@
             allSelectStatus() {     //产品全选状态控制
                 return this.$store.state.ShoppingCart.allSelect;
             },
-            ...mapGetters('ShoppingCart',{
-                cartGoods:'getProductsList'
+            ...mapGetters({
+                cartGoods:'ShoppingCart/getProductsList',
+                productsTotal:'ShoppingCart/productsTotal',
             }),
 
         },
@@ -89,6 +90,7 @@
 
             //结算
             cartBalance() {
+                //return console.log(this.cartGoods);
                 let isBuy = false;
                 for(let m=0;m < this.cartGoods.length;m++){
                     if(this.cartGoods[m].state === true){

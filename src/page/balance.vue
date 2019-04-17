@@ -117,7 +117,7 @@
 
         <!--立即支付-->
         <div class="balance-payment">
-            <p>支付金额： <span>￥{{totalProduct}}</span></p>
+            <p>支付金额： <span>￥{{productsTotal}}</span></p>
             <button type="button" @click="testClick">立 即 支 付</button>
         </div>
 
@@ -141,30 +141,31 @@
             HeaderTitle
         },
         computed: {
-            ...mapGetters('ShoppingCart',{
-                TradeProductItem:'getTradeProductItem',
-                getProductsList:'getProductsList',
+            ...mapGetters({
+                TradeProductItem:'ShoppingCart/getTradeProductItem',
+                getProductsList:'ShoppingCart/getProductsList',
+                productsTotal:'ShoppingCart/productsTotal',
 
             }),
-            /*...mapGetters('ShoppingCart',[
-                'getTradeProductItem',
-                'getProductsList',
-            ]),*/
-            ...mapState('ShoppingCart',{
-                totalProduct:'totalProduct',
-            })
 
         },
         watch: {
-
+            TradeProductItem() {
+                if(this.TradeProductItem.length == 0){
+                    this.TradeProductItem = this.$store.cartProductsList;
+                }
+                //console.log(this.TradeProductItem)
+            }
         },
         methods: {
             testClick() {
                 //console.log(this.TradeProductItem);
-                console.log(this.totalProduct);
-                console.log(this.$store.state.totalProduct);
-                console.log(this.$store.getters.getTradeProductItem);
-                //console.log(this.$store.state.ShoppingCart.allSelect);
+                //console.log(this.productsTotal);
+                //console.log(this.TradeProductItem);
+                console.log(this.$store.state.cartProductsList);
+                console.log(this.$store.state.ShoppingCart.cartProductsList);
+                //console.log(this.$store.state.cartProductsList);
+                //console.log(this.$store.state.testM.testNum);
             },
             selectActive(index) {
                 return this.isActive = index;

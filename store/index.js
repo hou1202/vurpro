@@ -14,6 +14,7 @@ import testM from './modules/testM'
 
 
 Vue.use(Vuex);
+
 const vuexPersisted = new vuexPersistedState({
     key: 'vurproVuex',
     storage: window.localStorage,

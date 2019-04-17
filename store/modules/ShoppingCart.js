@@ -22,11 +22,21 @@ const getters = {
     },
     //获取选中购物车产品列表
     getTradeProductItem:(state) => {
-        console.log(state);
+        console.log('132');
+        console.log(state.cartProductsList);
         return state.cartProductsList.filter(product => product.state === true);
+    },
+    //计算选中产品总价格
+    productsTotal:(state) => {
+        let total = 0.00;
+        for(let i=0; i < state.cartProductsList.length;i++){
+            if(state.cartProductsList[i].state === true){
+                total += state.cartProductsList[i].num*state.cartProductsList[i].price;
+            }
+        }
+        return total;
+    },
 
-
-    }
 
 
 };
@@ -35,23 +45,23 @@ const actions = {
      * 选择购物产品
      * param     id   number  购物产品索引，>=0为产品ID，-1为全选*/
     setCartProductsState({state}, id) {
+        let objStatus = false;
         if(id > 0){
-            //id索引为ID
+            /** id索引为ID
+             * 设置指定ID产品的选中状态
+             * */
             state.cartProductsList.find(obj => obj.id === id).state = !state.cartProductsList.find(obj => obj.id === id).state;
-            /*
-             //index索引为数组下标
-             state.cartProductsList[index].state = !state.cartProductsList[index].state
-             */
+
+            //判断全选状态
             for(let i=0; i< state.cartProductsList.length;i++) {
                 if(state.cartProductsList[i].state === true) {
-                    state.allSelect = true;
+                    objStatus = true;
                 }else{
-                    state.allSelect = false;
+                    objStatus = false;
                     break;
                 }
             }
         }else if(id < 0){
-            let objStatus = false;
             if(state.allSelect === true){
                 objStatus = false;
             }else if(state.allSelect === false) {
@@ -61,8 +71,8 @@ const actions = {
             for(let h=0; h< state.cartProductsList.length;h++) {
                 state.cartProductsList[h].state = objStatus
             }
-            state.allSelect = objStatus;
         }
+        state.allSelect = objStatus;
 
         //调用计算产品总价
         this.commit('ShoppingCart/productsPriceTotal');
@@ -91,16 +101,16 @@ const actions = {
         }else if(data.num){
             getters.getProductItem(data.id).num = data.num;
         }
-        commit('productsPriceTotal');
+        //commit('productsPriceTotal');
     },
 
     //初始化购物车
     setInitCart({state, dispatch}) {
-        state.allSelect = false;
-        state.totalProduct = 0.00;
 
         //有缓存数据直接读取缓存数据
         if(state.cartProductsList.length === 0) {
+            state.allSelect = false;
+            state.totalProduct = 0.00;
             dispatch('getShoppingCartData');
         }
         //dispatch('getShoppingCartData');
@@ -123,9 +133,6 @@ const mutations = {
         }
         state.totalProduct = total;
     },
-
-
-
 
 };
 
