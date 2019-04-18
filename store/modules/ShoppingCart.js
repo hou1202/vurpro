@@ -20,12 +20,12 @@ const getters = {
     getProductItem:(state) => (id) => {
         return state.cartProductsList.find(product => product.id === id)
     },
+
     //获取选中购物车产品列表
     getTradeProductItem:(state) => {
-        console.log('132');
-        console.log(state.cartProductsList);
         return state.cartProductsList.filter(product => product.state === true);
     },
+
     //计算选中产品总价格
     productsTotal:(state) => {
         let total = 0.00;
@@ -35,6 +35,17 @@ const getters = {
             }
         }
         return total;
+    },
+
+    //计算运算总金额
+    productFranking:(state) => {
+        let franking = 0.00;
+        for(let i=0; i < state.cartProductsList.length;i++){
+            if(state.cartProductsList[i].state === true){
+                franking = parseInt(franking)+parseInt(state.cartProductsList[i].franking);
+            }
+        }
+        return franking;
     },
 
 
@@ -110,7 +121,7 @@ const actions = {
         //有缓存数据直接读取缓存数据
         if(state.cartProductsList.length === 0) {
             state.allSelect = false;
-            state.totalProduct = 0.00;
+            //state.totalProduct = 0.00;
             dispatch('getShoppingCartData');
         }
         //dispatch('getShoppingCartData');

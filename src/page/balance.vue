@@ -40,24 +40,6 @@
                         <p>x {{item.num}}</p>
                     </div>
                 </div>
-                <div class="product-item">
-                    <img src="../assets/goods.jpg" alt="" />
-                    <div class="product-info">
-                        <p>联想ThinkPad 翼480（12CD）14英寸轻薄窄边框笔记本电脑 冰原银</p>
-                        <p>i5+8g+独显</p>
-                        <p>￥5499.00</p>
-                        <p>x 2</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <img src="../assets/goods.jpg" alt="" />
-                    <div class="product-info">
-                        <p>联想ThinkPad 翼480（12CD）14英寸轻薄窄边框笔记本电脑 冰原银</p>
-                        <p>i5+8g+独显</p>
-                        <p>￥5499.00</p>
-                        <p>x 2</p>
-                    </div>
-                </div>
             </div>
 
             <!--附属信息-->
@@ -103,10 +85,10 @@
                     <h2>结算信息</h2>
                 </div>
                 <div class="information-con">
-                    <p><span>交易总金额：</span>￥25.00</p>
-                    <p><span>商品总金额：</span>￥25.00</p>
+                    <p><span>交易总金额：</span>￥{{productsTotal+productFranking}}</p>
+                    <p><span>商品总金额：</span>￥{{productsTotal}}</p>
                     <p><span>优惠金额：</span>￥25.00</p>
-                    <p><span>运费金额：</span>￥25.00</p>
+                    <p><span>运费金额：</span>￥{{productFranking}}</p>
                     <p><span>订单积分：</span>25.00</p>
                     <p><span>实付金额：</span>￥25.00</p>
                 </div>
@@ -141,35 +123,25 @@
             HeaderTitle
         },
         computed: {
-            ...mapGetters({
-                TradeProductItem:'ShoppingCart/getTradeProductItem',
-                getProductsList:'ShoppingCart/getProductsList',
-                productsTotal:'ShoppingCart/productsTotal',
-
+            ...mapGetters('ShoppingCart',{
+                TradeProductItem:'getTradeProductItem',        //结算产品列表
+                productsTotal:'productsTotal',                 //产品总价
+                productFranking:'productFranking'
             }),
 
         },
         watch: {
-            TradeProductItem() {
-                if(this.TradeProductItem.length == 0){
-                    this.TradeProductItem = this.$store.cartProductsList;
-                }
-                //console.log(this.TradeProductItem)
-            }
+
         },
         methods: {
-            testClick() {
-                //console.log(this.TradeProductItem);
-                //console.log(this.productsTotal);
-                //console.log(this.TradeProductItem);
-                console.log(this.$store.state.cartProductsList);
-                console.log(this.$store.state.ShoppingCart.cartProductsList);
-                //console.log(this.$store.state.cartProductsList);
-                //console.log(this.$store.state.testM.testNum);
-            },
             selectActive(index) {
                 return this.isActive = index;
-            }
+            },
+            testClick() {
+                console.log(storageItem.cartProductsList);
+
+            },
+
         }
     }
 </script>
