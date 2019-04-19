@@ -4,24 +4,24 @@
 
         <div class="balance-info">
             <!--收货地址-->
-            <div class="address" v-if="emptyAddress">
+            <div class="address" v-if="ChoiceAddress">
                 <div class="address-top">
-                    <p>收货人：李白</p>
-                    <p>13564078415</p>
+                    <p>收货人：{{ChoiceAddress.name}}</p>
+                    <p>{{ChoiceAddress.phone}}</p>
                 </div>
                 <div class="address-under">
                     <i></i>
                     <div class="address-info">
-                        <p>安徽省.合肥市.蜀山区</p>
-                        <p>望江西路亚夏汽车大厦1602</p>
+                        <p>{{ChoiceAddress.city}}</p>
+                        <p>{{ChoiceAddress.street}}</p>
                     </div>
-                    <i></i>
+                    <router-link to="/choiceAddress"><i></i></router-link>
                 </div>
             </div>
-            <div class="address" v-if="!emptyAddress">
+            <div class="address" v-if="!ChoiceAddress">
                 <div class="address-empty">
                     <p>添加 / 选择收货地址...</p>
-                    <i></i>
+                    <router-link to="/choiceAddress"><i></i></router-link>
                 </div>
             </div>
 
@@ -119,6 +119,11 @@
                 isActive: 'ali',
             }
         },
+        created() {
+            //初始化订单结算
+            this.$store.dispatch('ShoppingCart/setInitBalance');
+
+        },
         components: {
             HeaderTitle
         },
@@ -126,7 +131,8 @@
             ...mapGetters('ShoppingCart',{
                 TradeProductItem:'getTradeProductItem',        //结算产品列表
                 productsTotal:'productsTotal',                 //产品总价
-                productFranking:'productFranking'
+                productFranking:'productFranking',
+                ChoiceAddress:'getChoiceAddress'
             }),
 
         },
@@ -138,7 +144,7 @@
                 return this.isActive = index;
             },
             testClick() {
-                console.log(storageItem.cartProductsList);
+                console.log(this.ChoiceAddress);
 
             },
 

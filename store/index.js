@@ -20,6 +20,7 @@ const vuexPersisted = new createPersistedState({
         ShoppingCart:{
             cartProductsList:state.ShoppingCart.cartProductsList,
             totalProduct:state.ShoppingCart.totalProduct,
+            tradeAddressList:state.ShoppingCart.tradeAddressList,
         },
 
     }),

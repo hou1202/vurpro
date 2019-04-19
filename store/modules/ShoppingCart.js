@@ -5,8 +5,10 @@ import axios from 'axios'
 
 const state = {
     cartProductsList:[],
+    tradeAddressList:[],
     totalProduct: 0.00,
     allSelect: false,
+    choiceAddress:0,
 };
 const getters = {
 
@@ -48,7 +50,19 @@ const getters = {
         return franking;
     },
 
-
+    //获取用户选择地址
+    getChoiceAddress:(state) => {
+        if(state.choiceAddress == 0){
+            return false;
+        }
+        return state.tradeAddressList.find(obj =>obj.id === state.choiceAddress);
+        //console.log(res);
+        /*if(res === 'undefined'){
+            return '123'
+        }else{
+            return res
+        }*/
+    }
 
 };
 const actions = {
@@ -101,7 +115,18 @@ const actions = {
         })
     },
 
-    /**设置购物车产品数量*/
+    /**
+     * 获取用户地址信息
+     * */
+    getTradeAddressData({commit, rootState}){
+        axios.get(rootState.Api.ApiTradeAddress+rootState.UserInfo.userId).then( res => {
+            commit('setTradeAddressData',res.data);
+        })
+    },
+
+    /**
+     * 设置购物车产品数量
+     * */
     setCartProductsNum({commit, getters}, data) {
         if(data.type === 'reduce' && getters.getProductItem(data.id).num > 1){
             getters.getProductItem(data.id).num -= 1;
@@ -124,14 +149,34 @@ const actions = {
             //state.totalProduct = 0.00;
             dispatch('getShoppingCartData');
         }
+        //复位地址信息
+        state.choiceAddress = 0;
         //dispatch('getShoppingCartData');
 
-    }
+    },
+
+    //初始化订单结算
+    setInitBalance({state, dispatch}) {
+
+        //有缓存数据直接读取缓存数据
+        if(state.tradeAddressList.length === 0 || state.choiceAddress === 0) {
+            console.log('reget');
+            dispatch('getTradeAddressData');
+        }
+        //dispatch('getShoppingCartData');
+
+    },
 };
 const mutations = {
     //设置购物车产品数据
     setShoppingCartData(state, data) {
         state.cartProductsList = data;
+    },
+    //设置用户地址数据
+    setTradeAddressData(state, data) {
+        state.tradeAddressList = data;
+        state.choiceAddress = state.tradeAddressList.find(obj => obj.choice == 1).id;
+
     },
 
     //计算购物车选中产品总价
@@ -144,6 +189,12 @@ const mutations = {
         }
         state.totalProduct = total;
     },
+
+    //设置选择地址
+    setChoiceAddress(state, data) {
+        console.log(data);
+        state.choiceAddress = data.id;
+    }
 
 };
 

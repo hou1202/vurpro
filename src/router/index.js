@@ -6,6 +6,7 @@ import Goods from '@/page/goods'
 import GoodsClassifyList from '@/page/goodsClassifyList'
 import Cart from '@/page/cart'
 import Balance from '@/page/balance'
+import choiceAddress from '@/page/choiceAddress'
 
 Vue.use(Router)
 
@@ -42,6 +43,12 @@ export default new Router({
           path: '/Balance',                     //订单结算
           name: 'Balance',
           component: Balance,
+
+      },
+      {
+          path: '/choiceAddress',               //地址选择
+          name: 'choiceAddress',
+          component: choiceAddress,
       },
   ]
 })
