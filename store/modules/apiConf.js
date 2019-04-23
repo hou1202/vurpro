@@ -13,7 +13,8 @@ const state = {
     ApiClassify: '/api/index/classify/',                        //分类列表
     ApiGoodsClassifyList: '/api/index/goodsClassifyList/',      //产品详情,param: id / page / limit
     ApiShoppingCartList: '/api/index/shoppingCart/',            //购物车产品列表,param: user_id
-    ApiTradeAddress: '/api/index/userTradeAddress/',            //购物车产品列表,param: user_id
+    ApiTradeAddress: '/api/index/userTradeAddress/',            //用户下单地址列表,param: user_id
+    ApiTradeCoupon: '/api/index/userTradeCoupon/',              //用户下单优惠券列表,param: user_id
 };
 
 export default {

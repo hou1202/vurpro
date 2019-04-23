@@ -7,6 +7,7 @@ import GoodsClassifyList from '@/page/goodsClassifyList'
 import Cart from '@/page/cart'
 import Balance from '@/page/balance'
 import choiceAddress from '@/page/choiceAddress'
+import choiceCoupon from '@/page/choiceCoupon'
 
 Vue.use(Router)
 
@@ -49,6 +50,11 @@ export default new Router({
           path: '/choiceAddress',               //地址选择
           name: 'choiceAddress',
           component: choiceAddress,
+      },
+      {
+          path: '/choiceCoupon',               //优惠券选择
+          name: 'choiceCoupon',
+          component: choiceCoupon,
       },
   ]
 })

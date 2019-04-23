@@ -6,9 +6,11 @@ import axios from 'axios'
 const state = {
     cartProductsList:[],
     tradeAddressList:[],
+    tradeCouponList:[],
     totalProduct: 0.00,
     allSelect: false,
     choiceAddress:0,
+    choiceCoupon:0
 };
 const getters = {
 
@@ -31,22 +33,22 @@ const getters = {
     //计算选中产品总价格
     productsTotal:(state) => {
         let total = 0.00;
-        for(let i=0; i < state.cartProductsList.length;i++){
-            if(state.cartProductsList[i].state === true){
-                total += state.cartProductsList[i].num*state.cartProductsList[i].price;
+        state.cartProductsList.filter(function(obj){
+            if(obj.state === true){
+                total += obj.num*obj.price;
             }
-        }
+        });
         return total;
     },
 
     //计算运算总金额
     productFranking:(state) => {
         let franking = 0.00;
-        for(let i=0; i < state.cartProductsList.length;i++){
-            if(state.cartProductsList[i].state === true){
-                franking = parseInt(franking)+parseInt(state.cartProductsList[i].franking);
+        state.cartProductsList.filter(function(obj){
+            if(obj.state === true){
+                franking = parseInt(franking)+parseInt(obj.franking)
             }
-        }
+        });
         return franking;
     },
 
@@ -56,12 +58,6 @@ const getters = {
             return false;
         }
         return state.tradeAddressList.find(obj =>obj.id === state.choiceAddress);
-        //console.log(res);
-        /*if(res === 'undefined'){
-            return '123'
-        }else{
-            return res
-        }*/
     }
 
 };
@@ -125,6 +121,26 @@ const actions = {
     },
 
     /**
+     * 获取用户优惠券信息
+     * */
+    getTradeCouponData({commit, state, rootState}){
+        let couponProduct = [];
+        state.cartProductsList.filter(function(obj){
+            if(obj.state === true){
+                couponProduct.push(obj.id)
+            }
+        });
+        axios.get(rootState.Api.ApiTradeCoupon+rootState.UserInfo.userId,{
+            param: {
+                goods_list:couponProduct,
+            }
+        }).then( res => {
+           // commit('setTradeAddressData',res.data);
+            console.log(res.data);
+        })
+    },
+
+    /**
      * 设置购物车产品数量
      * */
     setCartProductsNum({commit, getters}, data) {
@@ -160,11 +176,20 @@ const actions = {
 
         //有缓存数据直接读取缓存数据
         if(state.tradeAddressList.length === 0 || state.choiceAddress === 0) {
-            console.log('reget');
             dispatch('getTradeAddressData');
         }
         //dispatch('getShoppingCartData');
 
+    },
+
+    //初始化选择优惠券
+    setInitCoupon({state, dispatch}) {
+
+        //有缓存数据直接读取缓存数据
+        if(state.tradeCouponList.length === 0) {
+            state.choiceCoupon = 0;
+            dispatch('getTradeCouponData');
+        }
     },
 };
 const mutations = {
@@ -192,7 +217,6 @@ const mutations = {
 
     //设置选择地址
     setChoiceAddress(state, data) {
-        console.log(data);
         state.choiceAddress = data.id;
     }
 

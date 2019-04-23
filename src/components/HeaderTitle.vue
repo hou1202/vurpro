@@ -1,7 +1,7 @@
 <template>
     <div class="header-title">
         <h2>{{title}}</h2>
-        <i @click="$router.go(-1)"></i>
+        <i @click="returnBack()"></i>
     </div>
 </template>
 
@@ -11,7 +11,19 @@
         props: {
             title: {
                 type: String,
-                default: ''
+                default: '',
+            },
+            backUrl: {
+                type: String,
+                default: null,
+            }
+        },
+        methods: {
+            returnBack(){
+                if(this.backUrl === null){
+                    return this.$router.go(-1);
+                }
+                return this.$router.push(this.backUrl);
             }
         }
 

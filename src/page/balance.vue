@@ -1,6 +1,6 @@
 <template>
     <div class="balance">
-        <HeaderTitle title="订单结算"/>
+        <HeaderTitle title="订单结算" backUrl="/cart"/>
 
         <div class="balance-info">
             <!--收货地址-->
@@ -47,7 +47,7 @@
                 <div class="attach-item">
                     <h2>优惠券</h2>
                     <p>无</p>
-                    <i></i>
+                    <router-link to="/choiceCoupon"><i></i></router-link>
                 </div>
                 <div class="attach-item">
                     <h2>留言</h2>
@@ -144,7 +144,8 @@
                 return this.isActive = index;
             },
             testClick() {
-                console.log(this.ChoiceAddress);
+                //console.log(this.ChoiceAddress);
+                console.log(this.$store.dispatch('ShoppingCart/getTradeCouponData'));
 
             },
 

@@ -3,7 +3,7 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
+    import createPersistedState from 'vuex-persistedstate'
 import publicModule from './modules/publicModule'
 import Api from './modules/apiConf'
 import UserInfo from './modules/UserInfo'
@@ -13,9 +13,21 @@ import ShoppingCart from './modules/ShoppingCart'
 
 Vue.use(Vuex);
 
-const vuexPersisted = new createPersistedState({
-    key: 'vurproVuex',
+const localPersisted = new createPersistedState({
+    key: 'localPersisted',
     storage: window.localStorage,
+    reducer: (state) => ({
+        /*ShoppingCart:{
+            cartProductsList:state.ShoppingCart.cartProductsList,
+            totalProduct:state.ShoppingCart.totalProduct,
+            tradeAddressList:state.ShoppingCart.tradeAddressList,
+        },*/
+
+    }),
+});
+const sessionPersisted = new createPersistedState({
+    key: 'sessionPersisted',
+    storage: window.sessionStorage,
     reducer: (state) => ({
         ShoppingCart:{
             cartProductsList:state.ShoppingCart.cartProductsList,
@@ -39,7 +51,7 @@ export default new Vuex.Store({
     //strict:使 Vuex store 进入严格模式，在严格模式下，任何 mutation 处理函数以外修改 Vuex state 都会抛出错误。默认值: false
     strict: false,
     //持久化存储
-    plugins:[vuexPersisted]
+    plugins:[localPersisted,sessionPersisted]
     /*plugins:[vuexPersistedState({
         storage:window.localStorage,    //默认值为localStorage
         /!*reducer:val => {

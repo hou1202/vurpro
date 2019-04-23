@@ -3,8 +3,8 @@
         <HeaderTitle title="选择地址"/>
 
         <div class="choice">
-            <div class="choice-block" v-for="item in tradeAddressList">
-                <div class="block-info" @click="addressChoice(item.id)">
+            <div class="choice-block" v-for="item in tradeAddressList"  @click="addressChoice(item.id)">
+                <div class="block-info">
                     <p>{{item.name}}</p>
                     <p>{{item.phone}}</p>
                     <p>{{item.city}}</p>
