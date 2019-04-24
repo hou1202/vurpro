@@ -130,9 +130,11 @@ const actions = {
                 couponProduct.push(obj.id)
             }
         });
+        //return console.log(couponProduct);
         axios.get(rootState.Api.ApiTradeCoupon+rootState.UserInfo.userId,{
-            param: {
+            params: {
                 goods_list:couponProduct,
+                total:state.totalProduct,
             }
         }).then( res => {
            // commit('setTradeAddressData',res.data);

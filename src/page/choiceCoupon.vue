@@ -19,7 +19,7 @@
                     <p><span>有效期：</span> 2019-05-12</p>
                 </div>
             </div>
-
+            <button type="button" @click="testChoice">获取</button>
         </div>
 
     </div>
@@ -47,6 +47,9 @@
                 this.$store.commit('ShoppingCart/setChoiceCoupon',{id:id});
                 return this.$router.push({name:'Balance'});
 
+            },
+            testChoice() {
+                this.$store.dispatch('ShoppingCart/getTradeCouponData',{id:2});
             }
         }
     }
